@@ -1,0 +1,35 @@
+/* Variable Declarations */
+
+$pink:			     #ff8671;
+$light-pink:	   #fff3f1;
+$black:			     #111820;
+$white: 		     #ffffff;
+$text-color:	   #999999;
+$grey:			     #efefef;
+$grey2:          #e1e1e1;
+$dark-blue:		   #111820;
+
+.pink {
+  color: $pink !important;
+}
+.bg-pink {
+  background: $pink;
+}
+.light-pink {
+  color: $light-pink !important;
+}
+.black {
+  color: $black !important;
+}
+.white {
+  color: $white !important;
+}
+.text-color {
+  color: $text-color !important;
+}
+.grey {
+  color: $grey !important;
+}
+.dark-blue {
+  color: $dark-blue !important;
+}

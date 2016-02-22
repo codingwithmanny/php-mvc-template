@@ -1,0 +1,27 @@
+#featured-content {
+  padding: 45px 0 60px;
+
+  h3 {
+    color: $black;
+    font-size: 30px;
+    margin: 0 0 15px;
+  }
+
+  p {
+    color: #999;
+    margin: 0 0 40px;
+    line-height: 24px;
+  }
+
+  .featured-box img {
+    max-width: 100%;
+  }
+
+  .fet-box {
+    margin: 0 0 20px;
+
+    &:last-child {
+      margin: 0;
+    }
+  }
+}

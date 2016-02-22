@@ -1,0 +1,35 @@
+#services {
+  padding: 90px 0;
+  .service-box {
+    margin: 50px auto 0;
+    max-width: 400px;
+
+    .icon-wrap {
+      width: 120px;
+      height: 120px;
+      display: block;
+      margin: 0 auto;
+      padding: 35px 0 0;
+      text-align: center;
+      background: #fff3f1;
+      @include border-radius(50%);
+      @include box-sizing(border-box);
+    }
+
+    h3 {
+      color: $black;
+    }
+
+    p {
+      color: #999;
+      margin-bottom: 0;
+      line-height: 24px;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .service-box {
+      margin: 20px auto 0;
+    }
+  }
+}

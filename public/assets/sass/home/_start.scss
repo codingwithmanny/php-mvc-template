@@ -1,0 +1,29 @@
+#sec-title {
+  padding: 42px 0 36px;
+
+  h3 {
+    margin: 0;
+    font-size: 24px;
+  }
+
+  p {
+    color: #ffd7d0;
+    font-size: 18px;
+    margin: 0 0 20px;
+  }
+
+  .sec-btn {
+    color: $white;
+    font-size: 14px;
+    padding: 12px 18px;
+    background: #ff9e8d;
+    display: inline-block;
+    @include border-radius(2px);
+
+    &:hover, &:focus {
+      color: $black;
+      background: $grey;
+      text-decoration: none;
+    }
+  }
+}
