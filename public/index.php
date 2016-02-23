@@ -1,6 +1,57 @@
 <?php
 require dirname(__DIR__) . '/config/bootstrap.php';
 
+use App\Controllers\UsersController as Users;
+
+$model = new Users();
+
+$args = [
+    'params' => [
+        'page' => 1,
+        'limit' => 100
+    ]
+];
+
+echo '<hr/>';
+
+echo '<h1>All</h1>';
+
+echo '<pre>';
+var_dump($model->all($args));
+echo '</pre>';
+
+echo '<hr/>';
+
+echo '<h1>Create</h1>';
+
+echo '<pre>';
+//var_dump($model->create(['email' => 'sssss@asda.com', 'password' => '1234']));
+echo '</pre>';
+
+echo '<hr/>';
+
+echo '<h1>Read: 2</h1>';
+
+echo '<pre>';
+var_dump($model->read(['where' => [['id', '=', 2]]]));
+echo '</pre>';
+
+echo '<hr/>';
+
+echo '<h1>Update: 3</h1>';
+
+echo '<pre>';
+var_dump($model->update(['email' => 'aasa111s@asd.com'], ['where' => [['id', '=', 3]]]));
+echo '</pre>';
+
+echo '<hr/>';
+
+echo '<h1>Delete: 2</h1>';
+
+echo '<pre>';
+var_dump($model->delete(['where' => [['id', '=', 1]]]));
+echo '</pre>';
+
 //use Phroute\Phroute\RouteCollector;
 //use App\Controllers\JWTController;
 //
