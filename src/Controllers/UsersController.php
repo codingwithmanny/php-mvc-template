@@ -15,17 +15,17 @@ class UsersController extends Model
     /**
      * @var array
      */
-    protected $fields_all = ['id', 'email', 'password', 'created', 'modified'];
+    protected $fields_all = ['id', 'email', 'password', 'first_name', 'last_name', 'created', 'modified'];
 
     /**
      * @var array
      */
-    protected $fields_required = ['email', 'password'];
+    protected $fields_required = ['email', 'password', 'first_name', 'last_name'];
 
     /**
      * @var array
      */
-    protected $fields_viewable = ['id', 'email'];
+    protected $fields_viewable = ['id', 'email', 'first_name', 'last_name'];
 
     /**
      * UsersController constructor.

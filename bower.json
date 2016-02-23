@@ -1,0 +1,22 @@
+{
+  "name": "mvc-template",
+  "homepage": "https://github.com/mpineault/mvc-template",
+  "authors": [
+    "Manuel Pineault <manuel.pineault@gmail.com>"
+  ],
+  "description": "A php web application template",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap-sass": "^3.3.6"
+  }
+}
