@@ -26,7 +26,7 @@ class View
      * @param $template
      * @param null $data
      */
-    public function __construct($template, $data = null)
+    public function __construct($template = null, $data = null)
     {
         $this->template = APP .'Views/';
         $this->template .= ($template != null) ? $template . '.php' : 'json.php';
