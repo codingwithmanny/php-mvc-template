@@ -15,7 +15,7 @@ class UsersModel extends Model
     /**
      * @var array
      */
-    protected $fields_all = ['id', 'email', 'password', 'first_name', 'last_name', 'created', 'modified'];
+    protected $fields_all = ['id', 'email', 'password', 'role', 'first_name', 'last_name', 'created', 'modified'];
 
     /**
      * @var array
