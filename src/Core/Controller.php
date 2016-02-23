@@ -18,6 +18,16 @@ class Controller
     protected $model;
 
     /**
+     * @var
+     */
+    protected $model_name;
+
+    /**
+     * @var
+     */
+    protected $parent_template;
+
+    /**
      * Controller constructor.
      * @param null $model
      */
@@ -36,9 +46,11 @@ class Controller
      * @param null $data
      * @return \App\Core\View
      */
-    public function load_view($view = null, $data = null)
+    public function load_view($view = null, $data = null, $parent_view = false)
     {
-        return new View($view, $data);
+        $parent = ($parent_view != false) ? $parent_view : $this->parent_template;
+        $parent = 'Templates/' . $parent;
+        return new View($view, $data, $parent);
     }
 
     /**
@@ -47,11 +59,13 @@ class Controller
     public function json_request()
     {
         $headers = getallheaders();
-        if(array_key_exists('Accept', $headers) && strpos('application/json', $headers['Accept']) > -1) {
-            return false;
+        if(
+        (array_key_exists('Accept', $headers) && strpos('application/json', $headers['Accept']) > -1)
+        || (array_key_exists('Content-Type', $headers) && strpos('application/json', $headers['Content-Type']) > -1)) {
+            return true;
         }
 
-        return true;
+        return false;
     }
 
 }

@@ -150,7 +150,7 @@ class Model
         $data_vars = '';
 
         foreach ($data_args as $key => $value) {
-            if(!in_array($key, $this->fields_required)) {
+            if(!in_array($key, $this->fields_all)) {
                 array_push($errors, [$key => 'Invalid field.']);
             }
         }
@@ -317,18 +317,39 @@ class Model
 
     /**
      * @param array $query_args
+     * @param array $compare_args
      * @return array
      */
-    public function helper_fieldscleanup($query_args = [])
+    public function helper_cleanup($query_args = [], $compare_args = [])
     {
         if(count($query_args) == 0) return [];
         $new_query_args = [];
-        foreach($this->params_default as $key => $value) {
+        foreach($compare_args as $key => $value) {
             if(array_key_exists($key, $query_args) && $query_args[$key] != null && $query_args[$key] != 0) {
                 $new_query_args[$key] = $query_args[$key];
             }
         }
         return $new_query_args;
+    }
+
+    /**
+     * @param array $query_args
+     * @return array
+     */
+    public function helper_paramscleanup($query_args = [])
+    {
+        if(count($query_args) == 0) return [];
+        return $this->helper_cleanup($query_args, $this->params_default);
+    }
+
+    /**
+     * @param array $query_args
+     * @return array
+     */
+    public function helper_fieldscleanup($query_args = [])
+    {
+        if(count($query_args) == 0) return [];
+        return $this->helper_cleanup($query_args, $this->fields_required);
     }
 
 
