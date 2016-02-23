@@ -21,15 +21,14 @@ class UsersController extends Controller
         parent::__construct($model);
     }
 
-
+    /**
+     *
+     */
     public function index()
     {
-        return $this->model->all();
-        /*
-        echo 'result: '.$this->json_request();
-        echo '<pre>';
-        var_dump(getallheaders());
-        echo '</pre>';
-        */
+        $results = $this->model->all();
+
+        $template = ($this->json_request()) ? 'Users/all' : null;
+        $this->load_view($template, $results);
     }
 }

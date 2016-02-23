@@ -29,9 +29,15 @@ class View
     public function __construct($template = null, $data = null)
     {
         $this->template = APP .'Views/';
-        $this->template .= ($template != null) ? $template . '.php' : 'json.php';
+        $this->template .= ($template != null) ? $template . '.php' : 'Templates/json.php';
+
+        if(!file_exists($this->template)) {
+            echo 'Template "'. $this->template . '" does not exist.';
+            die();
+        }
+
         if($data != null) {
-            $this->page_vars = $data;
+            $this->page_vars = ['data' => $data];
         }
         $this->render();
     }
