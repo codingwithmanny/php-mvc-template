@@ -7,7 +7,7 @@ $router = new RouteCollector();
 
 /* ROUTES
 -------------------------------------- */
-$router->any('/', function(){return 'hello';});
+$router->any('/', ['App\Controllers\UsersController', 'index']);
 
 /* OUTPUT
 -------------------------------------- */

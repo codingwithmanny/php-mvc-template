@@ -95,17 +95,17 @@ class Model
                     array_push($errors, [$key => 'Invalid field.']);
                 }
             }
-
-            //add remaining default params
-            foreach ($this->params_default as $key => $value) {
-                if(!array_key_exists($key, $params)) {
-                    $params[$key] = $value;
-                }
-            }
-
-            //append to query
-            $query_end = ' ORDER BY ' . $params['order'] . ' ' . $params['sort'] . ' LIMIT ' . $params['limit'] . ' OFFSET ' . (($params['page'] - 1) * $params['limit']);
         }
+
+        //add remaining default params
+        foreach ($this->params_default as $key => $value) {
+            if(!array_key_exists($key, $params)) {
+                $params[$key] = $value;
+            }
+        }
+
+        //append to query
+        $query_end = ' ORDER BY ' . $params['order'] . ' ' . $params['sort'] . ' LIMIT ' . $params['limit'] . ' OFFSET ' . (($params['page'] - 1) * $params['limit']);
 
         //add table name
         $query = str_replace(':table', $this->table, $query);
