@@ -13,9 +13,7 @@
 require __DIR__ . '/paths.php';
 
 // Use composer to load the autoloader.
-if(file_exists(ROOT . DS . 'vendor' . DS . 'autoload.php')) {
-    require ROOT . DS . 'vendor' . DS . 'autoload.php';
-}
+require ROOT . DS . 'vendor' . DS . 'autoload.php';
 
 /**
  * Set server timezone to UTC. You can change it to another timezone of your

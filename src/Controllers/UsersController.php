@@ -25,22 +25,7 @@ class UsersController extends Model
     /**
      * @var array
      */
-    protected $fields_editable = [];
-
-    /**
-     * @var array
-     */
     protected $fields_viewable = ['id', 'email'];
-
-    /**
-     * @var array
-     */
-    protected $fields_searchable = [];
-
-    /**
-     * @var array
-     */
-    protected $params_default = ['page' => 1, 'limit' => 100, 'order' => 'id', 'sort' => 'asc'];
 
     /**
      * UsersController constructor.
