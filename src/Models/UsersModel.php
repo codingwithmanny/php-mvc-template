@@ -6,11 +6,11 @@
  * Time: 9:50 PM
  */
 
-namespace App\Controllers;
+namespace App\Models;
 
 use App\Core\Model;
 
-class UsersController extends Model
+class UsersModel extends Model
 {
     /**
      * @var array
@@ -28,7 +28,7 @@ class UsersController extends Model
     protected $fields_viewable = ['id', 'email', 'first_name', 'last_name'];
 
     /**
-     * UsersController constructor.
+     * UsersModel constructor.
      */
     public function __construct()
     {
