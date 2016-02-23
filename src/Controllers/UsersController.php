@@ -26,7 +26,11 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $results = $this->model->all();
+        $query = [
+            'params' => $this->model->helper_fieldscleanup($_GET)
+        ];
+
+        $results = $this->model->all($query);
 
         $template = ($this->json_request()) ? 'Users/all' : null;
         $this->load_view($template, $results);

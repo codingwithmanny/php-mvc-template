@@ -315,5 +315,21 @@ class Model
         return ['query' => $query, 'values' => $values, 'errors' => $errors];
     }
 
+    /**
+     * @param array $query_args
+     * @return array
+     */
+    public function helper_fieldscleanup($query_args = [])
+    {
+        if(count($query_args) == 0) return [];
+        $new_query_args = [];
+        foreach($this->params_default as $key => $value) {
+            if(array_key_exists($key, $query_args) && $query_args[$key] != null && $query_args[$key] != 0) {
+                $new_query_args[$key] = $query_args[$key];
+            }
+        }
+        return $new_query_args;
+    }
+
 
 }
