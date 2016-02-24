@@ -18,7 +18,6 @@ class UsersController extends Controller
     public function __construct()
     {
         $this->model_name = 'Users';
-        $this->parent_template = 'default';
         $model = new \App\Models\UsersModel();
         parent::__construct($model);
     }
@@ -36,7 +35,7 @@ class UsersController extends Controller
 
         //load view
         $parent_template = ($this->json_request()) ? 'json' : $this->parent_template;
-        $this->load_view($this->model_name . '/all', $results, $parent_template);
+        $this->load_view($this->model_name . '/all', $parent_template, $results);
     }
 
     /**
@@ -45,15 +44,27 @@ class UsersController extends Controller
     public function create_form()
     {
         //load view
-        $this->load_view($this->model_name . '/edit', $results, $this->parent_template);
+        $this->load_view($this->model_name . '/edit', $this->parent_template);
     }
 
+    /**
+     *
+     */
     public function create()
     {
-        $template = 'Users/create';
-//        if($this->json_request()) {
-//
-//        }
-//        $results = $this->model->create($this->model->helper_fieldscleanup($_POST))
+        $parent_template = $this->parent_template;
+        $post = $_POST;
+        if($this->json_request()) {
+            $parent_template = 'json';
+            $request_body = file_get_contents('php://input');
+            $post = json_decode($request_body, true);
+        }
+
+        $post = $this->model->helper_fieldscleanup($post);
+        $post['created'] = $post['modified'] = date('Y-m-d H:i:s');
+
+        $results = $this->model->create($post);
+
+        $this->load_view($this->model_name . '/all', $parent_template, $results);
     }
 }

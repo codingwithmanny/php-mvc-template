@@ -172,7 +172,16 @@ class Model
         $query = 'INSERT INTO ' . $this->table . ' (' . $data_keys . ') VALUES (' . $data_vars . ')';
 
         $results = $this->db->prepare($query);
-        return ['data' => $results->execute($values)];
+        $result = $results->execute($values);
+        $error_info = $results->errorInfo();
+        if(count($error_info) >= 3) {
+            if($error_info[1] != null) {
+                $error_msg = ($error_info[1] == 1062) ? ['Duplicate' => 'Entry already exists.'] : ['Other' => $error_info[2]];
+                return ['errors' => $error_msg];
+            }
+        }
+
+        return ['data' => $result];
     }
 
     /**
@@ -320,15 +329,45 @@ class Model
      * @param array $compare_args
      * @return array
      */
-    public function helper_cleanup($query_args = [], $compare_args = [])
+    public function helper_cleanup($query_args = [], $compare_args = [], $compare_keys = true, $all_required = false)
     {
         if(count($query_args) == 0) return [];
         $new_query_args = [];
-        foreach($compare_args as $key => $value) {
-            if(array_key_exists($key, $query_args) && $query_args[$key] != null && $query_args[$key] != 0) {
-                $new_query_args[$key] = $query_args[$key];
+
+        if($compare_keys) {
+            foreach ($compare_args as $key => $value) {
+                if (array_key_exists($key, $query_args) && $query_args[$key] != null) {
+                    $new_query_args[$key] = $query_args[$key];
+                }
+            }
+
+            if($all_required) {
+                foreach ($compare_args as $key => $value) {
+                    if (!array_key_exists($key, $query_args)) {
+                        $new_query_args = [];
+                        break;
+                    }
+                }
+            }
+        } else {
+            foreach ($compare_args as $key => $value) {
+                if (array_key_exists($value, $query_args)) {
+                    if($query_args[$value] != null) {
+                        $new_query_args[$value] = $query_args[$value];
+                    }
+                }
+            }
+
+            if($all_required) {
+                foreach ($compare_args as $key => $value) {
+                    if (!array_key_exists($value, $query_args)) {
+                        $new_query_args = [];
+                        break;
+                    }
+                }
             }
         }
+
         return $new_query_args;
     }
 
@@ -349,7 +388,7 @@ class Model
     public function helper_fieldscleanup($query_args = [])
     {
         if(count($query_args) == 0) return [];
-        return $this->helper_cleanup($query_args, $this->fields_required);
+        return $this->helper_cleanup($query_args, $this->fields_required, false);
     }
 
 

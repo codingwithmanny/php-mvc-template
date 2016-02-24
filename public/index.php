@@ -8,6 +8,8 @@ $router = new RouteCollector();
 /* ROUTES
 -------------------------------------- */
 $router->get('/users', ['App\Controllers\UsersController', 'index']);
+$router->get('/users/new', ['App\Controllers\UsersController', 'create_form']);
+$router->post('/users', ['App\Controllers\UsersController', 'create']);
 
 /* OUTPUT
 -------------------------------------- */

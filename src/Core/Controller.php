@@ -25,7 +25,7 @@ class Controller
     /**
      * @var
      */
-    protected $parent_template;
+    protected $parent_template = 'default';
 
     /**
      * Controller constructor.
@@ -46,7 +46,7 @@ class Controller
      * @param null $data
      * @return \App\Core\View
      */
-    public function load_view($view = null, $data = null, $parent_view = false)
+    public function load_view($view = null, $parent_view = false, $data = null)
     {
         $parent = ($parent_view != false) ? $parent_view : $this->parent_template;
         $parent = 'Templates/' . $parent;
