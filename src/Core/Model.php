@@ -142,7 +142,11 @@ class Model
      */
     public function create($data_args = [])
     {
-        if(count($data_args) == 0) return ['errors' => ['Arguments' => 'Missing data arguments.']];
+
+        if(count($data_args) == 0) {
+            header('HTTP/1.1 412 Precondition Failed');
+            return ['errors' => ['Arguments' => 'Missing data arguments.']];
+        }
 
         $errors = [];
         $values = [];
@@ -154,7 +158,10 @@ class Model
                 array_push($errors, [$key => 'Invalid field.']);
             }
         }
-        if((count($errors) > 0)) return ['errors' => $errors];
+        if((count($errors) > 0)) {
+            header('HTTP/1.1 412 Precondition Failed');
+            return ['errors' => $errors];
+        }
 
         foreach ($this->fields_required as $key => $value) {
             if(!array_key_exists($value, $data_args)) {
@@ -165,7 +172,10 @@ class Model
                 $values[':' . $value] = $data_args[$value];
             }
         }
-        if((count($errors) > 0)) return ['errors' => $errors];
+        if((count($errors) > 0)) {
+            header('HTTP/1.1 412 Precondition Failed');
+            return ['errors' => $errors];
+        }
 
         $data_keys = substr($data_keys, 0, -2);
         $data_vars = substr($data_vars, 0, -2);
@@ -177,6 +187,7 @@ class Model
         if(count($error_info) >= 3) {
             if($error_info[1] != null) {
                 $error_msg = ($error_info[1] == 1062) ? ['Duplicate' => 'Entry already exists.'] : ['Other' => $error_info[2]];
+                header('HTTP/1.1 409 Conflict');
                 return ['errors' => $error_msg];
             }
         }
@@ -191,7 +202,10 @@ class Model
      */
     public function read($query_args = [], $select_all = false)
     {
-        if(count($query_args) == 0) return ['errors' => ['Arguments' => 'Missing arguments.']];
+        if(count($query_args) == 0) {
+            header('HTTP/1.0 404 Not Found');
+            return ['errors' => ['Arguments' => 'Missing arguments.']];
+        }
 
         $query = 'SELECT ';
         $query .= ($select_all) ? '* ' : $this->helper_viewable() . ' ';
@@ -208,14 +222,21 @@ class Model
             $errors = $get['errors'];
         }
 
-        if((count($errors) > 0)) return ['errors' => $errors];
+        if((count($errors) > 0)) {
+            header('HTTP/1.0 404 Not Found');
+            return ['errors' => $errors];
+        }
 
         //execute results
         $results = $this->db->prepare(($query));
         $results->execute($values);
         $results = $results->fetch(\PDO::FETCH_ASSOC);
 
-        if(!$results) array_push($errors, ['Not Found' => 'Entry does not exist.']);
+        if(!$results) {
+            header('HTTP/1.0 404 Not Found');
+            array_push($errors, ['Not Found' => 'Entry does not exist.']);
+            return ['errors' => $errors];
+        }
 
         return ['data' => $results];
     }
@@ -227,9 +248,18 @@ class Model
      */
     public function update($data_args = [], $query_args = [])
     {
-        if(count($data_args) == 0) return ['errors' => ['Arguments' => 'Missing data arguments.']];
-        if(count($query_args) == 0) return ['errors' => ['Arguments' => 'Missing arguments.']];
-        if(!array_key_exists('data', $this->read($query_args))) return ['errors' => ['Not Found' => 'Entry does not exist.']];
+        if(count($data_args) == 0) {
+            header('HTTP/1.1 412 Precondition Failed');
+            return ['errors' => ['Arguments' => 'Missing data arguments.']];
+        }
+        if(count($query_args) == 0) {
+            header('HTTP/1.1 412 Precondition Failed');
+            return ['errors' => ['Arguments' => 'Missing arguments.']];
+        }
+        if(!array_key_exists('data', $this->read($query_args))) {
+            header('HTTP/1.0 404 Not Found');
+            return ['errors' => ['Not Found' => 'Entry does not exist.']];
+        }
 
         $query = 'UPDATE ';
         $values = [];
@@ -269,8 +299,14 @@ class Model
      */
     public function delete($query_args = [])
     {
-        if(count($query_args) == 0) return ['errors' => ['Arguments' => 'Missing arguments.']];
-        if(!array_key_exists('data', $this->read($query_args))) return ['errors' => ['Not Found' => 'Entry does not exist.']];
+        if(count($query_args) == 0) {
+            header('HTTP/1.1 412 Precondition Failed');
+            return ['errors' => ['Arguments' => 'Missing arguments.']];
+        }
+        if(!array_key_exists('data', $this->read($query_args))) {
+            header('HTTP/1.0 404 Not Found');
+            return ['errors' => ['Not Found' => 'Entry does not exist.']];
+        }
 
         $query = 'DELETE ';
         $values = [];

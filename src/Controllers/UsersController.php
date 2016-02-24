@@ -71,4 +71,22 @@ class UsersController extends Controller
             $this->load_view($this->model_name . '/edit', $parent_template, $results);
         }
     }
+
+    /**
+     *
+     */
+    public function read($id = null)
+    {
+        //request
+        $query = [
+            'where' => [
+                ['id', '=', $id]
+            ]
+        ];
+        $results = $this->model->read($query);
+
+        //load view
+        $parent_template = ($this->json_request()) ? 'json' : $this->parent_template;
+        $this->load_view($this->model_name . '/read', $parent_template, $results);
+    }
 }
