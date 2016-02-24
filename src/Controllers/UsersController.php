@@ -54,17 +54,21 @@ class UsersController extends Controller
     {
         $parent_template = $this->parent_template;
         $post = $_POST;
+
         if($this->json_request()) {
             $parent_template = 'json';
             $request_body = file_get_contents('php://input');
             $post = json_decode($request_body, true);
         }
-
         $post = $this->model->helper_fieldscleanup($post);
         $post['created'] = $post['modified'] = date('Y-m-d H:i:s');
 
         $results = $this->model->create($post);
 
-        $this->load_view($this->model_name . '/all', $parent_template, $results);
+        if(array_key_exists('data', $results) && $results['data'] == true && !$this->json_request()) {
+            header('Location: /users');
+        } else {
+            $this->load_view($this->model_name . '/edit', $parent_template, $results);
+        }
     }
 }
