@@ -14,7 +14,7 @@
                     $form_url = explode('/', $url);
                     unset($form_url[(count($form_url) - 1)]);
                     $form_url = implode('/', $form_url); ?>
-                    <form action="<?php echo $form_url; ?>/edit" method="post">
+                    <form action="<?php echo $form_url; ?>" method="post">
                         <?php if(isset($_GET['errors']) && strlen($_GET['errors']) > 0) {
                             $errors = explode(',', $_GET['errors']); ?>
                             <div class="form-group">

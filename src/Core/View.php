@@ -59,18 +59,22 @@ class View
 
         $url = '/';
         $header_url = '';
+        $item_url = '/';
         foreach($model_url as $key => $value) {
             $header_url .= (($key+1) != count($model_url)) ? '<a href="' . $form_url . '">' : '';
             $header_url .= $value;
             $header_url .= (($key+1) != count($model_url)) ? '</a>' : '';
             $header_url .= ($key+1 == count($model_url)) ? '' : '&nbsp;<small>/</small>&nbsp;';
             if($key == (count($model_url) - 1) || $key == (count($model_url))) {
-                $url .= $value;
-                $url .= ($key + 1 == count($model_url)) ? '' : '/';
+                $item_url .= $value;
+                $item_url .= ($key + 1 == count($model_url)) ? '' : '/';
             }
+            $url .= $value;
+            $url .= ($key + 1 == count($model_url)) ? '' : '/';
         }
 
         $this->page_vars['url'] = $url;
+        $this->page_vars['item_url'] = $item_url;
         $this->page_vars['header_url'] = $header_url;
 
         $this->render();

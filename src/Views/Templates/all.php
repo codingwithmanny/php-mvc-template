@@ -4,7 +4,7 @@
             <div class="col-xs-12">
                 <header>
                     <div class="page-header">
-                        <a href="<?php echo $url; ?>/create" class="btn btn-primary pull-right">Create</a>
+                        <a href="<?php echo $item_url; ?>/create" class="btn btn-primary pull-right">Create</a>
                         <h1>all: <?php echo $header_url; ?></h1>
                     </div>
                 </header>
@@ -39,8 +39,8 @@
                                             echo $v;
                                             echo '</td>';
                                         }
-                                        echo '<td><a href="' . $url . '/' . $value['id'] . '">View</a></td>';
-                                        echo '<td><a href="' . $url . '/' . $value['id'] . '/delete">Delete</a></td>';
+                                        echo '<td><a href="' . $item_url . '/' . $value['id'] . '">View</a></td>';
+                                        echo '<td><a href="' . $item_url . '/' . $value['id'] . '/delete">Delete</a></td>';
                                     echo '</tr>';
                                 }
                             }

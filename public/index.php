@@ -16,7 +16,7 @@ $router->post('/users', ['App\Controllers\UsersController', 'create']);
 $router->get('/users/{id}', ['App\Controllers\UsersController', 'read']);
 $router->get('/users/{id}/delete', ['App\Controllers\UsersController', 'delete']);
 $router->get('/users/{id}/edit', ['App\Controllers\UsersController', 'update_form']);
-$router->post('/users/{id}/edit', ['App\Controllers\UsersController', 'update']);
+$router->post('/users/{id}', ['App\Controllers\UsersController', 'update']);
 
 //items
 $router->get('/items', ['App\Controllers\ItemsController', 'index']);
@@ -25,7 +25,7 @@ $router->post('/items', ['App\Controllers\ItemsController', 'create']);
 $router->get('/items/{id}', ['App\Controllers\ItemsController', 'read']);
 $router->get('/items/{id}/delete', ['App\Controllers\ItemsController', 'delete']);
 $router->get('/items/{id}/edit', ['App\Controllers\ItemsController', 'update_form']);
-$router->post('/items/{id}/edit', ['App\Controllers\ItemsController', 'update']);
+$router->post('/items/{id}', ['App\Controllers\ItemsController', 'update']);
 
 //user items
 $router->get('/users/{user_id}/items', ['App\Controllers\UserItemsController', 'index']);
