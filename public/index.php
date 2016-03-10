@@ -22,6 +22,7 @@ $router->get('/auth/register', ['App\Controllers\Auth\AuthController', 'register
 $router->post('/auth/register', ['App\Controllers\Auth\AuthController', 'register']);
 $router->get('/auth/login', ['App\Controllers\Auth\AuthController', 'login_form']);
 $router->post('/auth/login', ['App\Controllers\Auth\AuthController', 'login']);
+$router->get('/auth/logout', ['App\Controllers\Auth\AuthController', 'logout']);
 
 
 //admin

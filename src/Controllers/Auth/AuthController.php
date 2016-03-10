@@ -33,6 +33,12 @@ class AuthController extends Controller
      */
     public function register_form()
     {
+        if(array_key_exists('WEBTOKEN', $_SESSION)) {
+            if($this->jwt->validate_token($_SESSION['WEBTOKEN'])) {
+                header('Location: /' . $this->admin_route($this->self()['data']));
+            }
+        }
+
         //load view
         $this->load_view($this->model_name . '/register', $this->parent_template, ['fields' => $this->model->helper_required_options(true)]);
     }
@@ -77,8 +83,7 @@ class AuthController extends Controller
             $get_user = $this->model->read($query);
             $_SESSION['WEBTOKEN'] = $this->jwt->create_token($get_user);
 
-//            @TODO: Revise for roles
-            header('Location: /admin');
+            header('Location: /' . $this->admin_route($get_user['data']));
         } else {
             if(array_key_exists('data', $results) && $results['data'] == true) {
                 //request
@@ -99,10 +104,19 @@ class AuthController extends Controller
      */
     public function login_form()
     {
+        if(array_key_exists('WEBTOKEN', $_SESSION)) {
+            if($this->jwt->validate_token($_SESSION['WEBTOKEN'])) {
+                header('Location: /' . $this->admin_route($this->self()['data']));
+            }
+        }
+
         //load view
         $this->load_view($this->model_name . '/login', $this->parent_template, ['fields' => $this->model->helper_required_options(true)]);
     }
 
+    /**
+     *
+     */
     public function login()
     {
         $parent_template = $this->parent_template;
@@ -139,17 +153,51 @@ class AuthController extends Controller
         } else if(array_key_exists('data', $results) && $results['data'] == true && !$this->json_request()) {
             $_SESSION['WEBTOKEN'] = $this->jwt->create_token($results);
 
-//            @TODO: Revise for roles
-            header('Location: /admin');
+            header('Location: /' . $this->admin_route($results['data']));
         } else {
             $results = (!array_key_exists('errors', $results)) ? ['data' => ['token' => $this->jwt->create_token($results)]] : $results;
             $this->load_view(null, $parent_template, $results);
         }
     }
 
+    /**
+     * @return string
+     */
+    public function logout()
+    {
+        if(array_key_exists('WEBTOKEN', $_SESSION)) {
+            unset($_SESSION['WEBTOKEN']);
+        }
+
+        if($this->json_request()) {
+            return json_encode(['data' => true]);
+        } else {
+            header('Location: /auth/login');
+        }
+    }
+
+    /**
+     * @return bool
+     */
     public function self()
     {
-//        @TODO
+        if(array_key_exists('WEBTOKEN', $_SESSION)) {
+            if($this->jwt->validate_token($_SESSION['WEBTOKEN'])) {
+                $name = $this->jwt->get_name($_SESSION['WEBTOKEN']);
+                $query = [
+                    'where' => [
+                        ['first_name', '=', $name[0]],
+                        ['last_name', '=', $name[1]]
+                    ]
+                ];
+
+                $results = $this->model->read($query);
+                if (!array_key_exists('errors', $results)) {
+                    return $results;
+                }
+            }
+        }
+        return false;
     }
 
     public function is_admin()
@@ -157,5 +205,17 @@ class AuthController extends Controller
 //        @TODO
     }
 
+    /**
+     * @param null $user
+     * @return string
+     */
+    public function admin_route($user = null)
+    {
+        switch($user['role']) {
+            default:
+                return 'admin';
+            break;
+        }
+    }
 
 }

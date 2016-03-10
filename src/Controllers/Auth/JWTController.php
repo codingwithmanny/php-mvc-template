@@ -24,50 +24,63 @@ class JWTController
      * @return bool
      */
     public function validate_token($token = false) {
-        /*$header_request = false;
-        $header_response = 'HTTP/1.1 401 Unauthorized';
-
-        if($header) {
-            $token = getallheaders()['WEBTOKEN'];
-            $header_request = true;
-        }
-
-        if($token == null || $token == false) {
+        if($token == false) {
+            unset($_SESSION['WEBTOKEN']);
             return false;
         }
 
         $jwt = explode('.', $token);
-        if(count($jwt) == 0 || count($jwt) < 2) return false;
+        if(count($jwt) == 0 || count($jwt) < 2) {
+            unset($_SESSION['WEBTOKEN']);
+            return false;
+        }
         $payload = json_decode(base64_decode($jwt[1]), true);
 
         if(gettype($payload) != 'array' || !array_key_exists('iss', $payload)) {
+            unset($_SESSION['WEBTOKEN']);
             return false;
         }
 
         if($payload['exp'] > time()) { //valid time
-            $user = $this->userModel->getUserByEmail($payload['email']);
+            $name = explode(' ', $payload['name']);
+            //request
+            $query = [
+                'where' => [
+                    ['first_name', '=', $name[0]],
+                    ['last_name', '=', $name[1]]
+                ]
+            ];
+            $user = $this->model->read($query);
             if($user) { //user exists
-                if($user['data']['admin'] == $payload['admin']) { //admin roles
-                    $encodedString = $jwt[0] . '.' . $jwt[1];
-                    $encodedString = hash_hmac('sha256', $encodedString, SECRET);
-                    if($encodedString == $jwt[2]) { //same token
-                        $header_response = 'HTTP/1.1 200 OK';
-                        if(!$header_request) {
-                            return true;
-                        }
+                if(array_key_exists('role', $payload) && $user['data']['role'] == $payload['role']) { //admin roles
+                    $encoded_string = $jwt[0] . '.' . $jwt[1];
+                    $encoded_string = hash_hmac('sha256', $encoded_string, SECRET);
+                    if($encoded_string == $jwt[2]) { //same token
+                        return true;
                     }
                 }
             }
         }
 
-        if($header_response == 'HTTP/1.1 401 Unauthorized' && $header_request) {
-            header($header_response);
-            exit();
-        } else {
-            if(!$header_request) {
-                return false;
+        unset($_SESSION['WEBTOKEN']);
+        return false;
+    }
+
+    /**
+     * @param bool $token
+     * @return array|bool
+     */
+    public function get_name($token = false)
+    {
+        $jwt = explode('.', $token);
+        if(count($jwt) == 3) {
+            $payload = json_decode(base64_decode($jwt[1]), true);
+            if(array_key_exists('name', $payload)) {
+                return explode(' ', $payload['name']);
             }
-        }*/
+        }
+
+        return false;
     }
 
     /**
@@ -80,11 +93,11 @@ class JWTController
 
         if(array_key_exists('data', $user)) {
             $header = base64_encode(json_encode(['type' => 'JWT', 'alg' => 'HS256']));
-            $payload = base64_encode(json_encode(['iss' => ISSUER, 'exp' => (time() + (30 * 24 * 60 * 60)), 'name' => $user['data']['first_name'] . ' ' . $user['data']['last_name'], 'admin' => $user['data']['role']]));
-            $encodedString = $header . '.' . $payload;
-            $encodedString = hash_hmac('sha256', $encodedString, SECRET);
+            $payload = base64_encode(json_encode(['iss' => ISSUER, 'exp' => (time() + (30 * 24 * 60 * 60)), 'name' => $user['data']['first_name'] . ' ' . $user['data']['last_name'], 'role' => $user['data']['role']]));
+            $encoded_string = $header . '.' . $payload;
+            $encoded_string = hash_hmac('sha256', $encoded_string, SECRET);
 
-            return $header . '.' . $payload . '.' . $encodedString;
+            return $header . '.' . $payload . '.' . $encoded_string;
         }
         return false;
     }
