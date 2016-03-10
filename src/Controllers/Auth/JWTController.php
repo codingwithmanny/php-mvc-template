@@ -8,7 +8,9 @@
  */
 namespace App\Controllers\Auth;
 
-class JWTController
+use App\Core\Controller;
+
+class JWTController extends Controller
 {
     /**
      * JWTController constructor.
@@ -16,7 +18,8 @@ class JWTController
     public function __construct()
     {
         $this->model_name = 'users';
-        $this->model = new \App\Models\UsersModel();
+        $model = new \App\Models\UsersModel();
+        parent::__construct($model);
     }
 
     /**

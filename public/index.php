@@ -2,6 +2,7 @@
 require dirname(__DIR__) . '/config/bootstrap.php';
 
 use Phroute\Phroute\RouteCollector;
+use App\Controllers\Auth\JWTController;
 
 $router = new RouteCollector();
 
@@ -26,7 +27,9 @@ $router->get('/auth/logout', ['App\Controllers\Auth\AuthController', 'logout']);
 
 
 //admin
-$router->get('/admin', ['App\Controllers\AdminController', 'dashboard']);
+$router->group(['before' => 'auth'], function($router) {
+    $router->get('/admin', ['App\Controllers\AdminController', 'dashboard']);
+});
 
 //API
 $router->group(['prefix' => 'api'], function($router) {
@@ -40,6 +43,23 @@ $router->group(['prefix' => 'api'], function($router) {
     //auth
     $router->post('/auth/register', ['App\Controllers\Auth\AuthController', 'register']);
     $router->post('/auth/login', ['App\Controllers\Auth\AuthController', 'login']);
+});
+
+/* FILTERS
+-------------------------------------- */
+$router->filter('auth', function() {
+    $jwt = new JWTController();
+    if($jwt->json_request()) {
+        $headers = getallheaders();
+        if(!array_key_exists('WEBTOKEN', $headers) || !$jwt->validate_token($headers['WEBTOKEN'])) {
+            header('HTTP/1.1 401 Unauthorized');
+            return false;
+        }
+    } else {
+        if(!isset($_SESSION) || !array_key_exists('WEBTOKEN', $_SESSION) || !$jwt->validate_token($_SESSION['WEBTOKEN'])) {
+            header('Location: /auth/login');
+        }
+    }
 });
 
 /* OUTPUT
