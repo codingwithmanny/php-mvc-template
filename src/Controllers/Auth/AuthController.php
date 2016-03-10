@@ -18,13 +18,20 @@ class AuthController extends Controller
     private $jwt;
 
     /**
+     * @var
+     */
+    private $reset;
+
+    /**
      * AuthController constructor.
      */
     public function __construct()
     {
+        $this->template_dir = 'auth';
         $this->model_name = 'auth';
         $model = new \App\Models\UsersModel();
         $this->jwt = new \App\Controllers\Auth\JWTController;
+        $this->reset = new \App\Models\ResetModel();
         parent::__construct($model);
     }
 
@@ -33,14 +40,10 @@ class AuthController extends Controller
      */
     public function register_form()
     {
-        if(array_key_exists('WEBTOKEN', $_SESSION)) {
-            if($this->jwt->validate_token($_SESSION['WEBTOKEN'])) {
-                header('Location: /' . $this->admin_route($this->self()['data']));
-            }
-        }
+        $this->is_loggedin();
 
         //load view
-        $this->load_view($this->model_name . '/register', $this->parent_template, ['fields' => $this->model->helper_required_options(true)]);
+        $this->load_view($this->template_dir . '/register', $this->parent_template, ['fields' => $this->model->helper_required_options(true)]);
     }
 
     /**
@@ -104,14 +107,10 @@ class AuthController extends Controller
      */
     public function login_form()
     {
-        if(array_key_exists('WEBTOKEN', $_SESSION)) {
-            if($this->jwt->validate_token($_SESSION['WEBTOKEN'])) {
-                header('Location: /' . $this->admin_route($this->self()['data']));
-            }
-        }
+        $this->is_loggedin();
 
         //load view
-        $this->load_view($this->model_name . '/login', $this->parent_template, ['fields' => $this->model->helper_required_options(true)]);
+        $this->load_view($this->template_dir . '/login', $this->parent_template, ['fields' => $this->model->helper_required_options(true)]);
     }
 
     /**
@@ -198,6 +197,82 @@ class AuthController extends Controller
             }
         }
         return false;
+    }
+
+    /**
+     *
+     */
+    public function forgot_form()
+    {
+        $this->is_loggedin();
+
+        //load view
+        $this->load_view($this->template_dir . '/forgot', $this->parent_template, ['fields' => $this->model->helper_required_options(true)]);
+    }
+
+    /**
+     *
+     */
+    public function forgot()
+    {
+        $parent_template = $this->parent_template;
+        $post = $_POST;
+
+        if($this->json_request()) {
+            $parent_template = 'json';
+            $request_body = file_get_contents('php://input');
+            $post = json_decode($request_body, true);
+        }
+        $post = $this->model->helper_fieldscleanup($post);
+
+        //request
+        $email = (array_key_exists('email', $post)) ? $post['email'] : null;
+        $query = [
+            'where' => [
+                ['email', '=', $email]
+            ]
+        ];
+
+        $results = $this->model->read($query);
+
+        if(array_key_exists('data', $results) && count($results['data']) > 1) {
+//            var_dump($results['data']);
+//            die();
+            $query = [
+                'where' => [
+                    ['user_id', '=', $results['data']['id']]
+                ]
+            ];
+            $this->reset->delete($query);
+
+            $args = [
+                'user_id' => $results['data']['id'],
+                'token' => hash_hmac('sha256', $results['data']['email'], SECRET),
+                'created' => date('Y-m-d H:i:s'),
+                'modified' => date('Y-m-d H:i:s')
+            ];
+
+            $this->reset->create($args);
+        }
+
+        if($this->json_request()) {
+            header('HTTP/1.1 200 OK');
+            $this->load_view(null, $parent_template, ['data' => 'Email sent with reset instructions.']);
+        } else {
+            header('Location: /auth/forgotpassword?success=reset');
+        }
+    }
+
+    /**
+     *
+     */
+    public function is_loggedin()
+    {
+        if(array_key_exists('WEBTOKEN', $_SESSION)) {
+            if($this->jwt->validate_token($_SESSION['WEBTOKEN'])) {
+                header('Location: /' . $this->admin_route($this->self()['data']));
+            }
+        }
     }
 
     public function is_admin()

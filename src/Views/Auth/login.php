@@ -29,6 +29,9 @@
                         <div class="form-group">
                             <button class="btn btn-primary" type="submit">Submit</button>
                         </div>
+                        <div class="form-group">
+                            <a href="/auth/forgotpassword">Forgot Password?</a>
+                        </div>
                     </form>
 
             </div>

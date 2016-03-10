@@ -179,6 +179,7 @@ class Model
                 $values[':' . $value] = $data_args[$value];
             }
         }
+
         if((count($errors) > 0)) {
             header('HTTP/1.1 412 Precondition Failed');
             return ['errors' => $errors];

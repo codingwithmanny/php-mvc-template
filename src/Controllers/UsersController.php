@@ -62,7 +62,7 @@ class UsersController extends Controller
             $post = json_decode($request_body, true);
         }
         $post = $this->model->helper_fieldscleanup($post);
-        $post['created'] = $post['modified'] = date('Y-m-d H:i:s');
+        $post['created'] = $post['modified'] = date('Y-m-d H:i:s', time());
         if(array_key_exists('password', $post)) {
             $post['password'] = hash_hmac('sha256', $post['password'], SECRET);
         }
