@@ -28,6 +28,11 @@ class ResetModel extends Model
     protected $fields_viewable = ['id', 'user_id', 'token', 'created', 'modified'];
 
     /**
+     * @var array
+     */
+    protected $fields_optional = ['created', 'modified'];
+
+    /**
      * UsersModel constructor.
      */
     public function __construct()

@@ -187,6 +187,14 @@ class Model
             }
         }
 
+        foreach ($this->fields_optional as $key => $value) {
+            if(array_key_exists($value, $data_args)) {
+                $data_keys .= $value . ', ';
+                $data_vars .= ':' . $value . ', ';
+                $values[':' . $value] = $data_args[$value];
+            }
+        }
+
         if((count($errors) > 0)) {
             header('HTTP/1.1 412 Precondition Failed');
             return ['errors' => $errors];

@@ -35,6 +35,11 @@ class UsersModel extends Model
     /**
      * @var array
      */
+    protected $fields_optional = ['created', 'modified'];
+
+    /**
+     * @var array
+     */
     protected $fields_viewable = ['id', 'email', 'role', 'first_name', 'last_name'];
 
 

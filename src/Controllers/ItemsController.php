@@ -28,19 +28,11 @@ class ItemsController extends Controller
      */
     public function index()
     {
-        //request
-        $query = [
-            'params' => $this->model->helper_paramscleanup($_GET)
-        ];
-
-//        if(array_key_exists('q', $_GET) && $_GET['q'] != null) {
-//            $query['query'] = 'FROM :table WHERE email LIKE \'%' . $_GET['q'] . '%\' OR first_name LIKE \'%' . $_GET['q'] . '%\' OR last_name LIKE \'%' . $_GET['q'] . '%\'';
-//        }
-        $results = $this->model->all($query);
-
-        //load view
-        $parent_template = ($this->json_request()) ? 'json' : $this->parent_template;
-        $this->load_view($this->template_dir . '/all', $parent_template, $results);
+        $q = null;
+        if(array_key_exists('q', $_GET) && $_GET['q'] != null) {
+            $q = 'FROM :table WHERE name LIKE \'%' . $_GET['q'] . '%\' OR description LIKE \'%' . $_GET['q'] . '%\'';
+        }
+        $this->_index($q);
     }
 
     /**
@@ -48,8 +40,7 @@ class ItemsController extends Controller
      */
     public function create_form()
     {
-        //load view
-        $this->load_view($this->template_dir . '/create', $this->parent_template, ['fields' => $this->model->helper_required_options(true)]);
+        $this->_create_form();
     }
 
     /**
@@ -57,35 +48,66 @@ class ItemsController extends Controller
      */
     public function create()
     {
-        $parent_template = $this->parent_template;
-        $post = $_POST;
+        $args = $this->get_payload();
+        $args['created'] = $args['modified'] = date('Y-m-d H:i:s', time());
+        $this->_create($args);
+    }
 
-        if($this->json_request()) {
-            $parent_template = 'json';
-            $request_body = file_get_contents('php://input');
-            $post = json_decode($request_body, true);
-        }
-        $post = $this->model->helper_fieldscleanup($post);
-        $post['created'] = $post['modified'] = date('Y-m-d H:i:s', time());
-        if(array_key_exists('password', $post)) {
-            $post['password'] = hash_hmac('sha256', $post['password'], SECRET);
-        }
+    /**
+     * @param null $id
+     */
+    public function read($id = null)
+    {
+        //request
+        $query = [
+            'where' => [
+                ['id', '=', $id]
+            ]
+        ];
+        $this->_read($query);
+    }
 
-        $results = $this->model->create($post);
+    /**
+     * @param $id
+     */
+    public function update_form($id)
+    {
+        $query = [
+            'where' => [
+                ['id', '=', $id]
+            ]
+        ];
+        $this->_update_form($query);
+    }
 
-        if(array_key_exists('errors', $results) && !$this->json_request()) {
-            $errors = [];
-            foreach($results['errors'] as $key => $value) {
-                foreach ($value as $k => $v) {
-                    array_push($errors, $k);
-                }
-            }
-            $errors = implode(',', $errors);
-            header('Location: /' . $this->model_name . '/create?errors='.$errors);
-        } else if(array_key_exists('data', $results) && $results['data'] == true && !$this->json_request()) {
-            header('Location: /' . $this->model_name);
-        } else {
-            $this->load_view($this->template_dir . '/create', $parent_template, $results);
-        }
+    /**
+     * @param null $id
+     */
+    public function update($id = null)
+    {
+        $query = [
+            'where' => [
+                ['id', '=', $id]
+            ]
+        ];
+
+        $args = $this->get_payload();
+        $args['modified'] = date('Y-m-d H:i:s', time());
+        $this->_update($query, $args);
+    }
+
+    /**
+     * @param null $id
+     */
+    public function delete($id = null)
+    {
+        //request
+        $query = [
+            'where' => [
+                ['id', '=', $id]
+            ]
+        ];
+
+        $this->_delete($query);
     }
 }

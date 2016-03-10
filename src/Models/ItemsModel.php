@@ -36,7 +36,7 @@ class ItemsModel extends Model
     /**
      * @var array
      */
-    protected $fields_optional = ['description', 'lat', 'lng', 'modified'];
+    protected $fields_optional = ['description', 'lat', 'lng', 'created', 'modified'];
 
     /**
      * @var array

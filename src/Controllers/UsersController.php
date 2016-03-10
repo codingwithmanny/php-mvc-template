@@ -71,6 +71,9 @@ class UsersController extends Controller
     }
 
 
+    /**
+     * @param $id
+     */
     public function update_form($id)
     {
         $query = [
