@@ -21,6 +21,11 @@ class Model
      */
     protected $fields_required = [];
 
+    /**
+     * @var array
+     */
+    protected $fields_required_options = [];
+
 
     /**
      * @var array
@@ -333,9 +338,25 @@ class Model
     /**
      * @return string
      */
-    private function helper_viewable()
+    public function helper_viewable($array = false)
     {
-        return implode(', ', $this->fields_viewable);
+        return ($array) ? $this->fields_viewable : implode(', ', $this->fields_viewable);
+    }
+
+    /**
+     * @return string
+     */
+    public function helper_required($array = false)
+    {
+        return ($array) ? $this->fields_required : implode(', ', $this->fields_required);
+    }
+
+    /**
+     * @return string
+     */
+    public function helper_required_options($array = false)
+    {
+        return ($array) ? $this->fields_required_options : implode(', ', $this->fields_required_options);
     }
 
     /**

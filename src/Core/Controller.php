@@ -50,7 +50,7 @@ class Controller
     {
         $parent = ($parent_view != false) ? $parent_view : $this->parent_template;
         $parent = 'Templates/' . $parent;
-        return new View($view, $data, $parent);
+        return new View($view, $parent, $data);
     }
 
     /**

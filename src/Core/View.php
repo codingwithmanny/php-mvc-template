@@ -26,7 +26,7 @@ class View
      * @param $template
      * @param null $data
      */
-    public function __construct($template = null, $data = null, $parent_template = null)
+    public function __construct($template = null, $parent_template = null, $data = null)
     {
         $this->template = APP .'Views/';
         $load = ($template != null) ? $template . '.php' : null;
@@ -42,16 +42,24 @@ class View
             $this->page_vars = ['data' => $data];
         }
 
+        if(array_key_exists('fields', $data)) {
+            $this->page_vars['form_fields'] = $this->form_builder($data['fields']);
+        }
+
         if($parent_template != null && $template != null) {
             $this->page_vars['template'] = $template;
         }
 
         $model_url = array_values(array_filter(explode('/', explode('?', $_SERVER['REQUEST_URI'], 2)[0])));
+        $this->page_vars['model_url'] = implode('/', $model_url);
+        $form_url = array_values($model_url);
+        unset($form_url[count($form_url) - 1]);
+        $form_url = '/' . implode('/', $form_url);
 
         $url = '';
         $header_url = '';
         foreach($model_url as $key => $value) {
-            $header_url .= (($key+1) != count($model_url)) ? '<a href="#">' : '';
+            $header_url .= (($key+1) != count($model_url)) ? '<a href="' . $form_url . '">' : '';
             $header_url .= $value;
             $header_url .= (($key+1) != count($model_url)) ? '</a>' : '';
             $header_url .= ($key != 0) ? '' : '&nbsp;<small>/</small>&nbsp;';
@@ -63,6 +71,26 @@ class View
         $this->page_vars['header_url'] = $header_url;
 
         $this->render();
+    }
+
+    function form_builder($fields)
+    {
+        $form_fields = [];
+        foreach($fields as $key => $value) {
+            switch($value['type']) {
+                default:
+                    $form_fields[$key] = '<input type="' . $value['type'] . '" ';
+                    $form_fields[$key] .= 'name="' . $key . '" ';
+                    if(array_key_exists('attributes', $value)) {
+                        foreach($value['attributes'] as $k => $v) {
+                            $form_fields[$key] .= $k . '="' . $v . '" ';
+                        }
+                    }
+                    $form_fields[$key] .= '/>';
+                break;
+            }
+        }
+        return $form_fields;
     }
 
     /**

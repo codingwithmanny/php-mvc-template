@@ -44,7 +44,7 @@ class UsersController extends Controller
     public function create_form()
     {
         //load view
-        $this->load_view($this->model_name . '/edit', $this->parent_template);
+        $this->load_view($this->model_name . '/create', $this->parent_template, ['fields' => $this->model->helper_required_options(true)]);
     }
 
     /**

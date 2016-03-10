@@ -8,7 +8,7 @@ $router = new RouteCollector();
 /* ROUTES
 -------------------------------------- */
 $router->get('/users', ['App\Controllers\UsersController', 'index']);
-$router->get('/users/new', ['App\Controllers\UsersController', 'create_form']);
+$router->get('/users/create', ['App\Controllers\UsersController', 'create_form']);
 $router->post('/users', ['App\Controllers\UsersController', 'create']);
 $router->get('/users/{id}', ['App\Controllers\UsersController', 'read']);
 //$router->delete('/users/{id}', ['App\Controllers\UsersController', 'delete']);

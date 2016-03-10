@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Title of the document</title>
+    <title><?php echo $model_url; ?></title>
 
     <link rel="stylesheet" href="/assets/stylesheets/styles.css">
 </head>
