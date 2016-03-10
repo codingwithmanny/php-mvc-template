@@ -4,19 +4,8 @@
             <div class="col-xs-12">
                 <header>
                     <div class="page-header">
-                        <h1>all: <?php
-                            $url = '';
-                            $header_url = '';
-                            foreach($model_url as $key => $value) {
-                                $header_url .= (($key+1) != count($model_url)) ? '<a href="#">' : '';
-                                $header_url .= $value;
-                                $header_url .= (($key+1) != count($model_url)) ? '</a>' : '';
-                                $header_url .= ($key != 0) ? '' : '&nbsp;<small>/</small>&nbsp;';
-                                $url .= $value;
-                                $url .= ($key != 0) ? '' : '/';
-                            }
-                            echo $header_url;
-                            ?></h1>
+                        <a href="<?php echo $url; ?>create" class="btn btn-primary pull-right">Create</a>
+                        <h1>all: <?php echo $header_url; ?></h1>
                     </div>
                 </header>
 

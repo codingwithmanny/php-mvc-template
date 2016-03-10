@@ -46,7 +46,21 @@ class View
             $this->page_vars['template'] = $template;
         }
 
-        $this->page_vars['model_url'] = array_values(array_filter(explode('/', explode('?', $_SERVER['REQUEST_URI'], 2)[0])));
+        $model_url = array_values(array_filter(explode('/', explode('?', $_SERVER['REQUEST_URI'], 2)[0])));
+
+        $url = '';
+        $header_url = '';
+        foreach($model_url as $key => $value) {
+            $header_url .= (($key+1) != count($model_url)) ? '<a href="#">' : '';
+            $header_url .= $value;
+            $header_url .= (($key+1) != count($model_url)) ? '</a>' : '';
+            $header_url .= ($key != 0) ? '' : '&nbsp;<small>/</small>&nbsp;';
+            $url .= $value;
+            $url .= ($key != 0) ? '' : '/';
+        }
+
+        $this->page_vars['url'] = $url;
+        $this->page_vars['header_url'] = $header_url;
 
         $this->render();
     }

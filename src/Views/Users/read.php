@@ -4,19 +4,7 @@
             <div class="col-xs-12">
                 <header>
                     <div class="page-header">
-                        <h1>read: <?php
-                            $url = '';
-                            $header_url = '';
-                            foreach($model_url as $key => $value) {
-                                $header_url .= (($key+1) != count($model_url)) ? '<a href="/' . $value .'">' : '';
-                                $header_url .= $value;
-                                $header_url .= (($key+1) != count($model_url)) ? '</a>' : '';
-                                $header_url .= ($key != 0) ? '' : '&nbsp;<small>/</small>&nbsp;';
-                                $url .= $value;
-                                $url .= ($key != 0) ? '' : '/';
-                            }
-                            echo $header_url;
-                            ?></h1>
+                        <h1>read: <?php echo $header_url; ?></h1>
                     </div>
                 </header>
 
