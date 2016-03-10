@@ -47,6 +47,183 @@ class Controller
     }
 
     /**
+     * @param null $q
+     */
+    public function _index($q = null)
+    {
+        //request
+        $query = [
+            'params' => $this->model->helper_paramscleanup($_GET)
+        ];
+
+        if($q != null) {
+            $query['query'] = $q;
+        }
+        $results = $this->model->all($query);
+
+        //load view
+        $parent_template = ($this->json_request()) ? 'json' : $this->parent_template;
+        $this->load_view($this->template_dir . '/all', $parent_template, $results);
+    }
+
+    /**
+     * @param null $template
+     * @param null $parent_template
+     */
+    public function _create_form($template = null, $parent_template = null)
+    {
+        $template = ($template == null) ? $this->template_dir . '/create' : $template;
+        $parent_template = ($parent_template == null) ? $this->parent_template : $parent_template;
+
+        //load view
+        $this->load_view($template, $parent_template, ['fields' => $this->model->helper_required_options(true)]);
+    }
+
+    /**
+     * @param array $args
+     * @param null $template
+     * @param null $parent_template
+     */
+    public function _create($args = [], $template = null, $parent_template = null)
+    {
+        $template = ($template == null) ? $this->model_name . '/create' : $template;
+        $parent = ($this->json_request()) ? 'json' : $this->parent_template;
+        $parent_template = ($parent_template == null) ? $parent : $parent_template;
+
+        $results = $this->model->create($args);
+
+        if(array_key_exists('errors', $results) && !$this->json_request()) {
+            $errors = [];
+            foreach($results['errors'] as $key => $value) {
+                if(gettype($value) == 'string') {
+                    array_push($errors, $value);
+                } else {
+                    foreach ($value as $k => $v) {
+                        array_push($errors, $k);
+                    }
+                }
+            }
+            $errors = implode(',', $errors);
+            header('Location: /' . $template . '?errors='.$errors);
+        } else if(array_key_exists('data', $results) && $results['data'] == true && !$this->json_request()) {
+            header('Location: /' . $this->model_name);
+        } else {
+            $this->load_view($template, $parent_template, $results);
+        }
+    }
+
+    /**
+     * @param null $query
+     * @param null $template
+     * @param null $parent_template
+     */
+    public function _read($query = null, $template = null, $parent_template = null)
+    {
+        $results = $this->model->read($query);
+
+        //load view
+        $template = ($template == null) ? $this->template_dir . '/read' : $template;
+        $parent = ($this->json_request()) ? 'json' : $this->parent_template;
+        $parent_template = ($parent_template == null) ? $parent : $parent_template;
+        $this->load_view($template, $parent_template, $results);
+    }
+
+    /**
+     * @param null $query
+     * @param null $template
+     * @param null $parent_template
+     */
+    public function _update_form($query = null, $template = null, $parent_template = null)
+    {
+        $results = $this->model->read($query);
+
+        $results = array_merge($results, ['fields' => $this->model->helper_required_options(true)]);
+
+        //load view
+        $template = ($template == null) ? $this->template_dir . '/edit' : $template;
+        $parent_template = ($parent_template == null) ? $this->parent_template : $parent_template;
+
+        $this->load_view($template, $parent_template, $results);
+    }
+
+    /**
+     * @param null $query
+     * @param array $args
+     * @param null $template
+     * @param null $parent_template
+     */
+    public function _update($query = null, $args = [], $template = null, $parent_template = null)
+    {
+        $template = ($template == null) ? $this->model_name . '/' . $query['where'][0][2] . '/edit' : $template;
+        $parent = ($this->json_request()) ? 'json' : $this->parent_template;
+        $parent_template = ($parent_template == null) ? $parent : $parent_template;
+
+        $results = $this->model->update($query, $args);
+
+        if(array_key_exists('errors', $results) && !$this->json_request()) {
+            $errors = [];
+            foreach($results['errors'] as $key => $value) {
+                if(gettype($value) == 'string') {
+                    array_push($errors, $value);
+                } else {
+                    foreach ($value as $k => $v) {
+                        array_push($errors, $k);
+                    }
+                }
+            }
+            $errors = implode(',', $errors);
+            header('Location: /' . $template . '?errors='.$errors);
+        } else if(array_key_exists('data', $results) && $results['data'] == true && !$this->json_request()) {
+            header('Location: /' . $template);
+        } else {
+            $this->load_view($template, $parent_template, $results);
+        }
+    }
+
+    /**
+     * @param null $query
+     * @param null $template
+     * @param null $parent_template
+     */
+    public function _delete($query = null, $template = null, $parent_template = null)
+    {
+        $template = ($template == null) ? $this->model_name : $template;
+        $parent = ($this->json_request()) ? 'json' : $this->parent_template;
+        $parent_template = ($parent_template == null) ? $parent : $parent_template;
+
+        $results = $this->model->delete($query);
+
+        if(array_key_exists('errors', $results) && !$this->json_request()) {
+            $errors = [];
+            foreach($results['errors'] as $key => $value) {
+                foreach ($value as $k => $v) {
+                    array_push($errors, $k);
+                }
+            }
+            $errors = implode(',', $errors);
+            header('Location: /' . $template . '/?errors='.$errors);
+        } else if(array_key_exists('data', $results) && $results['data'] == true && !$this->json_request()) {
+            header('Location: /' . $template);
+        } else {
+            $this->load_view($template, $parent_template, $results);
+        }
+    }
+
+    /**
+     * @return mixed
+     */
+    function get_payload()
+    {
+        $post = $_POST;
+
+        if($this->json_request()) {
+            $request_body = file_get_contents('php://input');
+            $post = json_decode($request_body, true);
+        }
+        return $this->model->helper_fieldscleanup($post);
+    }
+
+    /**
      * @param null $view
      * @param null $data
      * @return \App\Core\View

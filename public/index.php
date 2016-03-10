@@ -18,6 +18,11 @@ $router->get('/users/{id}/delete', ['App\Controllers\UsersController', 'delete']
 $router->get('/users/{id}/edit', ['App\Controllers\UsersController', 'update_form']);
 $router->post('/users/{id}/edit', ['App\Controllers\UsersController', 'update']);
 
+//items
+$router->get('/items', ['App\Controllers\ItemsController', 'index']);
+$router->get('/items/create', ['App\Controllers\ItemsController', 'create_form']);
+$router->post('/items', ['App\Controllers\ItemsController', 'create']);
+
 //auth
 $router->get('/auth/register', ['App\Controllers\Auth\AuthController', 'register_form']);
 $router->post('/auth/register', ['App\Controllers\Auth\AuthController', 'register']);

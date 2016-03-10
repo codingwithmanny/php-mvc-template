@@ -29,6 +29,11 @@ class Model
     /**
      * @var array
      */
+    protected $fields_optional = [];
+
+    /**
+     * @var array
+     */
     protected $fields_viewable = ['*'];
 
     /**
@@ -178,6 +183,7 @@ class Model
                 $data_keys .= $value . ', ';
                 $data_vars .= ':' . $value . ', ';
                 $values[':' . $value] = $data_args[$value];
+                unset($data_args[$value]);
             }
         }
 
@@ -451,6 +457,6 @@ class Model
     public function helper_fieldscleanup($query_args = [])
     {
         if(count($query_args) == 0) return [];
-        return $this->helper_cleanup($query_args, $this->fields_required, false);
+        return $this->helper_cleanup($query_args, $this->fields_all, false);
     }
 }
