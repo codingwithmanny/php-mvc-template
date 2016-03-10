@@ -8,3 +8,4 @@ define('DB_CHARSET', 'utf8');
 define('SECRET', 'your_secret_key');
 define('ISSUER', 'localhost');
 define('APPKEY', 'your_app_key');
+date_default_timezone_set('America/Montreal');

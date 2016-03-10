@@ -236,8 +236,6 @@ class AuthController extends Controller
         $results = $this->model->read($query);
 
         if(array_key_exists('data', $results) && count($results['data']) > 1) {
-//            var_dump($results['data']);
-//            die();
             $query = [
                 'where' => [
                     ['user_id', '=', $results['data']['id']]
@@ -247,9 +245,7 @@ class AuthController extends Controller
 
             $args = [
                 'user_id' => $results['data']['id'],
-                'token' => hash_hmac('sha256', $results['data']['email'], SECRET),
-                'created' => date('Y-m-d H:i:s'),
-                'modified' => date('Y-m-d H:i:s')
+                'token' => hash_hmac('sha256', $results['data']['email'] . date('Y-m-d H:i:s', time()), SECRET)
             ];
 
             $this->reset->create($args);
@@ -263,6 +259,92 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     *
+     */
+    public function reset_form($token)
+    {
+        $data = ['errors' => [['Token' => 'Invalid or expired token.']]];
+        $this->is_loggedin();
+
+        $query = [
+            'where' => [
+                ['token', '=', $token]
+            ]
+        ];
+        $results = $this->reset->read($query);
+
+        if(array_key_exists('data', $results) && count($results['data']) > 1) {
+            if($this->date_diff($results['data']['created'], date('Y-m-d H:i:s', time())) < 5) {
+                $data = ['token' => $results['data']['token']];
+            } else {
+                $this->reset->delete($query);
+            }
+        }
+
+        $this->load_view($this->template_dir . '/reset', $this->parent_template, $data);
+    }
+
+    /**
+     *
+     */
+    public function reset()
+    {
+        $data = ['errors' => [['Password' => 'Missing data arguments.']]];
+        $parent_template = $this->parent_template;
+        $post = $_POST;
+        $token = (array_key_exists('token', $_POST)) ? $_POST['token'] : null;
+
+        if($this->json_request()) {
+            $parent_template = 'json';
+            $request_body = file_get_contents('php://input');
+            $post = json_decode($request_body, true);
+            $token = (array_key_exists('token', $post)) ? $post['token'] : null;
+        }
+
+        $post = $this->model->helper_fieldscleanup($post);
+
+        $query = [
+            'where' => [
+                ['token', '=', $token]
+            ]
+        ];
+        $results = $this->reset->read($query);
+
+        if(array_key_exists('data', $results) && $this->date_diff($results['data']['created'], date('Y-m-d H:i:s', time())) < 5) {
+            $query = [
+                'where' => [
+                    ['id', '=', $results['data']['user_id']]
+                ]
+            ];
+
+            if(array_key_exists('password', $post) && strlen($post['password']) > 0) {
+                $args = [
+                    'password' => hash_hmac('sha256', $post['password'], SECRET)
+                ];
+
+                $data = $this->model->update($query, $args);
+            }
+        } else {
+            $data = ['errors' => [['Token' => 'Invalid or expired token.']]];
+        }
+
+        $query = [
+            'where' => [
+                ['token', '=', $token]
+            ]
+        ];
+        $this->reset->delete($query);
+
+        if(array_key_exists('errors', $data) && !$this->json_request()) {
+            header('Location: /auth/resetpassword/' . $token);
+        } else if(array_key_exists('data', $data) && $data['data'] == true && !$this->json_request()) {
+            header('Location: /auth/login');
+        } else {
+            $this->load_view(null, $parent_template, $data);
+        }
+    }
+    
     /**
      *
      */

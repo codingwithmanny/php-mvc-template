@@ -26,6 +26,8 @@ $router->post('/auth/login', ['App\Controllers\Auth\AuthController', 'login']);
 $router->get('/auth/logout', ['App\Controllers\Auth\AuthController', 'logout']);
 $router->get('/auth/forgotpassword', ['App\Controllers\Auth\AuthController', 'forgot_form']);
 $router->post('/auth/forgotpassword', ['App\Controllers\Auth\AuthController', 'forgot']);
+$router->get('/auth/resetpassword/{token}', ['App\Controllers\Auth\AuthController', 'reset_form']);
+$router->post('/auth/resetpassword/', ['App\Controllers\Auth\AuthController', 'reset']);
 
 //admin
 $router->group(['before' => 'auth'], function($router) {
@@ -45,6 +47,7 @@ $router->group(['prefix' => 'api'], function($router) {
     $router->post('/auth/register', ['App\Controllers\Auth\AuthController', 'register']);
     $router->post('/auth/login', ['App\Controllers\Auth\AuthController', 'login']);
     $router->post('/auth/forgotpassword', ['App\Controllers\Auth\AuthController', 'forgot']);
+    $router->post('/auth/resetpassword/', ['App\Controllers\Auth\AuthController', 'reset']);
 });
 
 /* FILTERS

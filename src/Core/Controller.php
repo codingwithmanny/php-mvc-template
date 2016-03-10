@@ -73,4 +73,17 @@ class Controller
         return false;
     }
 
+    /**
+     * @param $one
+     * @param $two
+     * @return array
+     */
+    function date_diff($one, $two)
+    {
+        $from_time = strtotime($one);
+        $to_time = strtotime($two);
+
+        return round(abs($to_time - $from_time) / 60,2);
+    }
+
 }
