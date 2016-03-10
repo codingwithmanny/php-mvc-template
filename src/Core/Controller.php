@@ -49,7 +49,7 @@ class Controller
     public function load_view($view = null, $parent_view = false, $data = null)
     {
         $parent = ($parent_view != false) ? $parent_view : $this->parent_template;
-        $parent = 'Templates/' . $parent;
+        $parent = 'Layouts/' . $parent;
         return new View($view, $parent, $data);
     }
 
