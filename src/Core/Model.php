@@ -130,7 +130,9 @@ class Model
             'sort' => $params['sort'],
             'count' => $count,
             'has_next' => ($count - ($params['page'] * $params['limit']) > 0) ? true : false,
-            'has_prev' => ($params['page'] > 1 && (($params['page']-1)*$params['limit'] < $count)) ? true : false
+            'has_prev' => ($params['page'] > 1 && (($params['page']-1)*$params['limit'] < $count)) ? true : false,
+            'url_prev' => '?page=' . $params['page'] . '&limit=' . $params['limit'] . '&order=' . $params['order'] . '&sort=' . $params['sort'],
+            'url_next' => '?page=' . $params['page'] . '&limit=' . $params['limit'] . '&order=' . $params['order'] . '&sort=' . $params['sort']
         ];
 
         return ['data' => $results->fetchAll(\PDO::FETCH_ASSOC), 'pagination' => $pagination];
@@ -426,6 +428,4 @@ class Model
         if(count($query_args) == 0) return [];
         return $this->helper_cleanup($query_args, $this->fields_required, false);
     }
-
-
 }

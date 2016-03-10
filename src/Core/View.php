@@ -46,6 +46,8 @@ class View
             $this->page_vars['template'] = $template;
         }
 
+        $this->page_vars['model_url'] = array_values(array_filter(explode('/', explode('?', $_SERVER['REQUEST_URI'], 2)[0])));
+
         $this->render();
     }
 

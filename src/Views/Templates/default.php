@@ -2,9 +2,19 @@
 <html>
 <head>
     <title>Title of the document</title>
+
+    <link rel="stylesheet" href="/assets/stylesheets/styles.css">
 </head>
 <body>
-    <h1>DEFAULT</h1>
+    <header>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h1>Template: default.php</h1>
+                </div>
+            </div>
+        </div>
+    </header>
 
     <?php
     $file = APP .'Views/' . $template . '.php';

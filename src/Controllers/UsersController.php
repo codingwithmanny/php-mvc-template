@@ -66,7 +66,7 @@ class UsersController extends Controller
         $results = $this->model->create($post);
 
         if(array_key_exists('data', $results) && $results['data'] == true && !$this->json_request()) {
-            header('Location: /users');
+            header('Location: /' . $this->model_name);
         } else {
             $this->load_view($this->model_name . '/edit', $parent_template, $results);
         }
@@ -89,4 +89,17 @@ class UsersController extends Controller
         $parent_template = ($this->json_request()) ? 'json' : $this->parent_template;
         $this->load_view($this->model_name . '/read', $parent_template, $results);
     }
+
+    /**
+     *
+     */
+    public function update_form()
+    {
+        //load view
+        $this->load_view($this->model_name . '/edit', $this->parent_template);
+    }
+
+    //@TODO: update_form
+    //@TODO: update
+    //@TODO: delete
 }
