@@ -8,6 +8,7 @@ $router = new RouteCollector();
 /* ROUTES
 -------------------------------------- */
 //VIEWS
+//users
 $router->get('/users', ['App\Controllers\UsersController', 'index']);
 $router->get('/users/create', ['App\Controllers\UsersController', 'create_form']);
 $router->post('/users', ['App\Controllers\UsersController', 'create']);
@@ -16,15 +17,29 @@ $router->get('/users/{id}/delete', ['App\Controllers\UsersController', 'delete']
 $router->get('/users/{id}/edit', ['App\Controllers\UsersController', 'update_form']);
 $router->post('/users/{id}/edit', ['App\Controllers\UsersController', 'update']);
 
+//auth
+$router->get('/auth/register', ['App\Controllers\Auth\AuthController', 'register_form']);
+$router->post('/auth/register', ['App\Controllers\Auth\AuthController', 'register']);
+$router->get('/auth/login', ['App\Controllers\Auth\AuthController', 'login_form']);
+$router->post('/auth/login', ['App\Controllers\Auth\AuthController', 'login']);
+
+
+//admin
+$router->get('/admin', ['App\Controllers\AdminController', 'dashboard']);
+
 //API
 $router->group(['prefix' => 'api'], function($router) {
+    //users
     $router->get('/users', ['App\Controllers\UsersController', 'index']);
     $router->get('/users/{id}', ['App\Controllers\UsersController', 'read']);
     $router->post('/users', ['App\Controllers\UsersController', 'create']);
     $router->put('/users/{id}', ['App\Controllers\UsersController', 'update']);
     $router->delete('/users/{id}', ['App\Controllers\UsersController', 'delete']);
-});
 
+    //auth
+    $router->post('/auth/register', ['App\Controllers\Auth\AuthController', 'register']);
+    $router->post('/auth/login', ['App\Controllers\Auth\AuthController', 'login']);
+});
 
 /* OUTPUT
 -------------------------------------- */

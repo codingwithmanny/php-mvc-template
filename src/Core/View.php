@@ -42,7 +42,7 @@ class View
             $this->page_vars = ['data' => $data];
         }
 
-        if(array_key_exists('fields', $data)) {
+        if($data != null && array_key_exists('fields', $data)) {
             $field_data = (array_key_exists('data', $data)) ? $data['data'] : null;
             $this->page_vars['form_fields'] = $this->form_builder($data['fields'], $field_data);
         }

@@ -368,9 +368,11 @@ class Model
         $query = '';
         $values = [];
         $errors = [];
+        $query .= ' WHERE ';
         foreach ($query_args['where'] as $key => $value) {
             if (in_array($value[0], $this->fields_all) && count($value) == 3) {
-                $query .= ' WHERE ' . $value[0] . ' ' . $value[1] . ' :' . $value[0];
+                if($key != 0) $query .= ' AND ';
+                $query .= $value[0] . ' ' . $value[1] . ' :' . $value[0];
                 $values[':' . $value[0]] = $value[2];
             } else if(count($value) == 3) {
                 array_push($errors, [$value[0] => 'Invalid field.']);
