@@ -32,6 +32,11 @@ class UsersController extends Controller
         $query = [
             'params' => $this->model->helper_paramscleanup($_GET)
         ];
+
+        if(array_key_exists('q', $_GET) && $_GET['q'] != null) {
+//            $query['query'] = 'FROM :table WHERE email LIKE %' . $_GET['q'] . '% OR first_name LIKE %' . $_GET['q'] . '% OR last_name LIKE %' . $_GET['q'] . '%';
+            $query['query'] = 'FROM :table WHERE email LIKE \'%' . $_GET['q'] . '%\' OR first_name LIKE \'%' . $_GET['q'] . '%\' OR last_name LIKE \'%' . $_GET['q'] . '%\'';
+        }
         $results = $this->model->all($query);
 
         //load view

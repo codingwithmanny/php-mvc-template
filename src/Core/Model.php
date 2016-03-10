@@ -26,17 +26,15 @@ class Model
      */
     protected $fields_required_options = [];
 
-
     /**
      * @var array
      */
     protected $fields_viewable = ['*'];
 
-
     /**
      * @var array
      */
-    protected $params_default = ['page' => 1, 'limit' => 100, 'order' => 'id', 'sort' => 'asc'];
+    protected $params_default = ['page' => 1, 'limit' => 100, 'order' => 'id', 'sort' => 'asc', 'q' => null];
 
     /**
      * @var \PDO
@@ -135,11 +133,12 @@ class Model
             'limit' => $params['limit'],
             'order' => $params['order'],
             'sort' => $params['sort'],
+            'q' => $params['q'],
             'count' => $count,
             'has_next' => ($count - ($params['page'] * $params['limit']) > 0) ? true : false,
             'has_prev' => ($params['page'] > 1 && (($params['page']-1)*$params['limit'] < $count)) ? true : false,
-            'url_prev' => '?page=' . $page_prev . '&limit=' . $params['limit'] . '&order=' . $params['order'] . '&sort=' . $params['sort'],
-            'url_next' => '?page=' . $page_next . '&limit=' . $params['limit'] . '&order=' . $params['order'] . '&sort=' . $params['sort']
+            'url_prev' => '?page=' . $page_prev . '&limit=' . $params['limit'] . '&order=' . $params['order'] . '&sort=' . $params['sort'] . '&q=' . $params['q'],
+            'url_next' => '?page=' . $page_next . '&limit=' . $params['limit'] . '&order=' . $params['order'] . '&sort=' . $params['sort'] . '&q=' . $params['q']
         ];
 
         return ['data' => $results->fetchAll(\PDO::FETCH_ASSOC), 'pagination' => $pagination];
