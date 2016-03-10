@@ -7,6 +7,7 @@ $router = new RouteCollector();
 
 /* ROUTES
 -------------------------------------- */
+//VIEWS
 $router->get('/users', ['App\Controllers\UsersController', 'index']);
 $router->get('/users/create', ['App\Controllers\UsersController', 'create_form']);
 $router->post('/users', ['App\Controllers\UsersController', 'create']);
@@ -14,9 +15,16 @@ $router->get('/users/{id}', ['App\Controllers\UsersController', 'read']);
 $router->get('/users/{id}/delete', ['App\Controllers\UsersController', 'delete']);
 $router->get('/users/{id}/edit', ['App\Controllers\UsersController', 'update_form']);
 $router->post('/users/{id}/edit', ['App\Controllers\UsersController', 'update']);
-//@TODO: update
 
-//$router->delete('/users/{id}', ['App\Controllers\UsersController', 'delete']);
+//API
+$router->group(['prefix' => 'api'], function($router) {
+    $router->get('/users', ['App\Controllers\UsersController', 'index']);
+    $router->get('/users/{id}', ['App\Controllers\UsersController', 'read']);
+    $router->post('/users', ['App\Controllers\UsersController', 'create']);
+    $router->put('/users/{id}', ['App\Controllers\UsersController', 'update']);
+    $router->delete('/users/{id}', ['App\Controllers\UsersController', 'delete']);
+});
+
 
 /* OUTPUT
 -------------------------------------- */

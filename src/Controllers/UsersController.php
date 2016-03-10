@@ -62,7 +62,9 @@ class UsersController extends Controller
         }
         $post = $this->model->helper_fieldscleanup($post);
         $post['created'] = $post['modified'] = date('Y-m-d H:i:s');
-        $post['password'] = hash_hmac('sha256', $post['password'], SECRET);
+        if(array_key_exists('password', $post)) {
+            $post['password'] = hash_hmac('sha256', $post['password'], SECRET);
+        }
 
         $results = $this->model->create($post);
 
@@ -188,6 +190,7 @@ class UsersController extends Controller
         } else if(array_key_exists('data', $results) && $results['data'] == true && !$this->json_request()) {
             header('Location: /' . $this->model_name);
         } else {
+            $parent_template = ($this->json_request()) ? 'json' : $this->parent_template;
             $this->load_view($this->model_name, $parent_template, $results);
         }
     }
