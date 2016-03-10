@@ -27,6 +27,10 @@ $router->get('/items/{id}/delete', ['App\Controllers\ItemsController', 'delete']
 $router->get('/items/{id}/edit', ['App\Controllers\ItemsController', 'update_form']);
 $router->post('/items/{id}/edit', ['App\Controllers\ItemsController', 'update']);
 
+//user items
+$router->get('/users/{user_id}/items', ['App\Controllers\UserItemsController', 'index']);
+$router->get('/users/{user_id}/items/{id}', ['App\Controllers\ItemsController', 'read']);
+
 //auth
 $router->get('/auth/register', ['App\Controllers\Auth\AuthController', 'register_form']);
 $router->post('/auth/register', ['App\Controllers\Auth\AuthController', 'register']);

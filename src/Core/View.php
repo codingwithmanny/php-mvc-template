@@ -64,8 +64,10 @@ class View
             $header_url .= $value;
             $header_url .= (($key+1) != count($model_url)) ? '</a>' : '';
             $header_url .= ($key+1 == count($model_url)) ? '' : '&nbsp;<small>/</small>&nbsp;';
-            $url .= $value;
-            $url .= ($key+1 == count($model_url)) ? '' : '/';
+            if($key == (count($model_url) - 1) || $key == (count($model_url))) {
+                $url .= $value;
+                $url .= ($key + 1 == count($model_url)) ? '' : '/';
+            }
         }
 
         $this->page_vars['url'] = $url;

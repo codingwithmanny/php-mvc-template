@@ -49,16 +49,15 @@ class Controller
     /**
      * @param null $q
      */
-    public function _index($q = null)
+    public function _index($q = null, $query = [])
     {
         //request
-        $query = [
-            'params' => $this->model->helper_paramscleanup($_GET)
-        ];
+        $query['params'] = $this->model->helper_paramscleanup($_GET);
 
         if($q != null) {
             $query['query'] = $q;
         }
+
         $results = $this->model->all($query);
 
         //load view

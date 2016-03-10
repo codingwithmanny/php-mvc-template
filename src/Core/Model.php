@@ -115,6 +115,11 @@ class Model
         //append to query
         $query_end = ' ORDER BY ' . $params['order'] . ' ' . $params['sort'] . ' LIMIT ' . $params['limit'] . ' OFFSET ' . (($params['page'] - 1) * $params['limit']);
 
+//        echo '<pre>';
+//        var_dump(($query . $query_end));
+//        echo '</pre>';
+//        die();
+
         //add table name
         $query = str_replace(':table', $this->table, $query);
         unset($values[':table']);
