@@ -25,6 +25,11 @@ class Controller
     /**
      * @var
      */
+    protected $template_dir;
+
+    /**
+     * @var
+     */
     protected $parent_template = 'default';
 
     /**

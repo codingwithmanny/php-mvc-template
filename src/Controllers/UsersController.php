@@ -18,6 +18,7 @@ class UsersController extends Controller
     public function __construct()
     {
         $this->model_name = 'users';
+        $this->template_dir = 'templates';
         $model = new \App\Models\UsersModel();
         parent::__construct($model);
     }
@@ -35,7 +36,7 @@ class UsersController extends Controller
 
         //load view
         $parent_template = ($this->json_request()) ? 'json' : $this->parent_template;
-        $this->load_view($this->model_name . '/all', $parent_template, $results);
+        $this->load_view($this->template_dir . '/all', $parent_template, $results);
     }
 
     /**
@@ -44,7 +45,7 @@ class UsersController extends Controller
     public function create_form()
     {
         //load view
-        $this->load_view($this->model_name . '/create', $this->parent_template, ['fields' => $this->model->helper_required_options(true)]);
+        $this->load_view($this->template_dir . '/create', $this->parent_template, ['fields' => $this->model->helper_required_options(true)]);
     }
 
     /**
@@ -80,7 +81,7 @@ class UsersController extends Controller
         } else if(array_key_exists('data', $results) && $results['data'] == true && !$this->json_request()) {
             header('Location: /' . $this->model_name);
         } else {
-            $this->load_view($this->model_name . '/create', $parent_template, $results);
+            $this->load_view($this->template_dir . '/create', $parent_template, $results);
         }
     }
 
@@ -99,7 +100,7 @@ class UsersController extends Controller
 
         //load view
         $parent_template = ($this->json_request()) ? 'json' : $this->parent_template;
-        $this->load_view($this->model_name . '/read', $parent_template, $results);
+        $this->load_view($this->template_dir . '/read', $parent_template, $results);
     }
 
     /**
@@ -118,7 +119,7 @@ class UsersController extends Controller
         $results = array_merge($results, ['fields' => $this->model->helper_required_options(true)]);
 
         //load view
-        $this->load_view($this->model_name . '/edit', $this->parent_template, $results);
+        $this->load_view($this->template_dir . '/edit', $this->parent_template, $results);
     }
 
     /**
@@ -161,7 +162,7 @@ class UsersController extends Controller
         } else if(array_key_exists('data', $results) && $results['data'] == true && !$this->json_request()) {
             header('Location: /' . $this->model_name . '/' . $id . '/edit');
         } else {
-            $this->load_view($this->model_name . '/' . $id . '/edit', $parent_template, $results);
+            $this->load_view($this->template_dir . '/' . $id . '/edit', $parent_template, $results);
         }
     }
 
@@ -191,7 +192,7 @@ class UsersController extends Controller
             header('Location: /' . $this->model_name);
         } else {
             $parent_template = ($this->json_request()) ? 'json' : $this->parent_template;
-            $this->load_view($this->model_name, $parent_template, $results);
+            $this->load_view($this->template_dir, $parent_template, $results);
         }
     }
 }
