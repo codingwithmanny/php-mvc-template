@@ -344,7 +344,7 @@ class AuthController extends Controller
             $this->load_view(null, $parent_template, $data);
         }
     }
-    
+
     /**
      *
      */

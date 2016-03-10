@@ -127,6 +127,8 @@ class Model
         $results->execute($values);
         $count = $count_results->rowCount();
 
+        $page_prev = (($params['page'] - 1) > 0) ? ($params['page'] - 1) : 1;
+        $page_next = (($params['page'] * $params['limit']) < $count) ? ($params['page'] + 1) : $params['page'];
         //pagination
         $pagination = [
             'page' => $params['page'],
@@ -136,8 +138,8 @@ class Model
             'count' => $count,
             'has_next' => ($count - ($params['page'] * $params['limit']) > 0) ? true : false,
             'has_prev' => ($params['page'] > 1 && (($params['page']-1)*$params['limit'] < $count)) ? true : false,
-            'url_prev' => '?page=' . $params['page'] . '&limit=' . $params['limit'] . '&order=' . $params['order'] . '&sort=' . $params['sort'],
-            'url_next' => '?page=' . $params['page'] . '&limit=' . $params['limit'] . '&order=' . $params['order'] . '&sort=' . $params['sort']
+            'url_prev' => '?page=' . $page_prev . '&limit=' . $params['limit'] . '&order=' . $params['order'] . '&sort=' . $params['sort'],
+            'url_next' => '?page=' . $page_next . '&limit=' . $params['limit'] . '&order=' . $params['order'] . '&sort=' . $params['sort']
         ];
 
         return ['data' => $results->fetchAll(\PDO::FETCH_ASSOC), 'pagination' => $pagination];
