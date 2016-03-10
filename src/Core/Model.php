@@ -253,7 +253,7 @@ class Model
      * @param array $query_args
      * @return array
      */
-    public function update($data_args = [], $query_args = [])
+    public function update($query_args = [], $data_args = [])
     {
         if(count($data_args) == 0) {
             header('HTTP/1.1 412 Precondition Failed');

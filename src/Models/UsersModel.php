@@ -26,10 +26,10 @@ class UsersModel extends Model
      * @var array
      */
     protected $fields_required_options = [
-        'email' => ['type' => 'email', 'attributes' => ['min' => 6, 'max' => 250, 'class' => 'form-control', 'placeholder' => 'Email', 'required' => 'required']],
-        'password' => ['type' => 'password', 'attributes' => ['min' => 8, 'max' => 250, 'class' => 'form-control', 'placeholder' => 'Password', 'required' => 'required']],
-        'first_name' => ['type' => 'text', 'attributes' => ['min' => 1, 'max' => 250, 'class' => 'form-control', 'placeholder' => 'First Name', 'required' => 'required']],
-        'last_name' => ['type' => 'text', 'attributes' => ['min' => 1, 'max' => 250, 'class' => 'form-control', 'placeholder' => 'Last Name', 'required' => 'required']]
+        'email' => ['type' => 'email', 'attributes' => ['min' => 6, 'max' => 250, 'class' => 'form-control', 'placeholder' => 'Email']],
+        'password' => ['type' => 'password', 'attributes' => ['min' => 8, 'max' => 250, 'class' => 'form-control', 'placeholder' => 'Password']],
+        'first_name' => ['type' => 'text', 'attributes' => ['min' => 1, 'max' => 250, 'class' => 'form-control', 'placeholder' => 'First Name']],
+        'last_name' => ['type' => 'text', 'attributes' => ['min' => 1, 'max' => 250, 'class' => 'form-control', 'placeholder' => 'Last Name']]
     ];
 
     /**

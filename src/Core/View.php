@@ -43,7 +43,8 @@ class View
         }
 
         if(array_key_exists('fields', $data)) {
-            $this->page_vars['form_fields'] = $this->form_builder($data['fields']);
+            $field_data = (array_key_exists('data', $data)) ? $data['data'] : null;
+            $this->page_vars['form_fields'] = $this->form_builder($data['fields'], $field_data);
         }
 
         if($parent_template != null && $template != null) {
@@ -56,15 +57,15 @@ class View
         unset($form_url[count($form_url) - 1]);
         $form_url = '/' . implode('/', $form_url);
 
-        $url = '';
+        $url = '/';
         $header_url = '';
         foreach($model_url as $key => $value) {
             $header_url .= (($key+1) != count($model_url)) ? '<a href="' . $form_url . '">' : '';
             $header_url .= $value;
             $header_url .= (($key+1) != count($model_url)) ? '</a>' : '';
-            $header_url .= ($key != 0) ? '' : '&nbsp;<small>/</small>&nbsp;';
+            $header_url .= ($key+1 == count($model_url)) ? '' : '&nbsp;<small>/</small>&nbsp;';
             $url .= $value;
-            $url .= ($key != 0) ? '' : '/';
+            $url .= ($key+1 == count($model_url)) ? '' : '/';
         }
 
         $this->page_vars['url'] = $url;
@@ -73,7 +74,12 @@ class View
         $this->render();
     }
 
-    function form_builder($fields)
+    /**
+     * @param $fields
+     * @param null $data
+     * @return array
+     */
+    function form_builder($fields, $data = null)
     {
         $form_fields = [];
         foreach($fields as $key => $value) {
@@ -85,6 +91,9 @@ class View
                         foreach($value['attributes'] as $k => $v) {
                             $form_fields[$key] .= $k . '="' . $v . '" ';
                         }
+                    }
+                    if($data != null && array_key_exists($key, $data)) {
+                        $form_fields[$key] .= 'value="' . $data[$key] . '"';
                     }
                     $form_fields[$key] .= '/>';
                 break;

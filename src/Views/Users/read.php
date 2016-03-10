@@ -4,6 +4,7 @@
             <div class="col-xs-12">
                 <header>
                     <div class="page-header">
+                        <a href="<?php echo $url; ?>/edit" class="btn btn-primary pull-right">Edit</a>
                         <h1>read: <?php echo $header_url; ?></h1>
                     </div>
                 </header>

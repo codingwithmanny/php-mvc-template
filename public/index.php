@@ -11,11 +11,12 @@ $router->get('/users', ['App\Controllers\UsersController', 'index']);
 $router->get('/users/create', ['App\Controllers\UsersController', 'create_form']);
 $router->post('/users', ['App\Controllers\UsersController', 'create']);
 $router->get('/users/{id}', ['App\Controllers\UsersController', 'read']);
-//$router->delete('/users/{id}', ['App\Controllers\UsersController', 'delete']);
-//@TODO: delete
-//@TODO: update form
+$router->get('/users/{id}/delete', ['App\Controllers\UsersController', 'delete']);
 $router->get('/users/{id}/edit', ['App\Controllers\UsersController', 'update_form']);
+$router->post('/users/{id}/edit', ['App\Controllers\UsersController', 'update']);
 //@TODO: update
+
+//$router->delete('/users/{id}', ['App\Controllers\UsersController', 'delete']);
 
 /* OUTPUT
 -------------------------------------- */

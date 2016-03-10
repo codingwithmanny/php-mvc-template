@@ -17,7 +17,7 @@ class UsersController extends Controller
      */
     public function __construct()
     {
-        $this->model_name = 'Users';
+        $this->model_name = 'users';
         $model = new \App\Models\UsersModel();
         parent::__construct($model);
     }
@@ -62,18 +62,28 @@ class UsersController extends Controller
         }
         $post = $this->model->helper_fieldscleanup($post);
         $post['created'] = $post['modified'] = date('Y-m-d H:i:s');
+        $post['password'] = hash_hmac('sha256', $post['password'], SECRET);
 
         $results = $this->model->create($post);
 
-        if(array_key_exists('data', $results) && $results['data'] == true && !$this->json_request()) {
+        if(array_key_exists('errors', $results) && !$this->json_request()) {
+            $errors = [];
+            foreach($results['errors'] as $key => $value) {
+                foreach ($value as $k => $v) {
+                    array_push($errors, $k);
+                }
+            }
+            $errors = implode(',', $errors);
+            header('Location: /' . $this->model_name . '/create?errors='.$errors);
+        } else if(array_key_exists('data', $results) && $results['data'] == true && !$this->json_request()) {
             header('Location: /' . $this->model_name);
         } else {
-            $this->load_view($this->model_name . '/edit', $parent_template, $results);
+            $this->load_view($this->model_name . '/create', $parent_template, $results);
         }
     }
 
     /**
-     *
+     * @param null $id
      */
     public function read($id = null)
     {
@@ -91,15 +101,94 @@ class UsersController extends Controller
     }
 
     /**
-     *
+     * @param $id
      */
-    public function update_form()
+    public function update_form($id)
     {
+        //request
+        $query = [
+            'where' => [
+                ['id', '=', $id]
+            ]
+        ];
+        $results = $this->model->read($query);
+
+        $results = array_merge($results, ['fields' => $this->model->helper_required_options(true)]);
+
         //load view
-        $this->load_view($this->model_name . '/edit', $this->parent_template);
+        $this->load_view($this->model_name . '/edit', $this->parent_template, $results);
     }
 
-    //@TODO: update_form
-    //@TODO: update
-    //@TODO: delete
+    /**
+     * @param null $id
+     */
+    public function update($id = null)
+    {
+        $parent_template = $this->parent_template;
+        $post = $_POST;
+
+        if($this->json_request()) {
+            $parent_template = 'json';
+            $request_body = file_get_contents('php://input');
+            $post = json_decode($request_body, true);
+        }
+        $post = $this->model->helper_fieldscleanup($post);
+        $post['modified'] = date('Y-m-d H:i:s');
+        if(array_key_exists('password', $post)) {
+            $post['password'] = hash_hmac('sha256', $post['password'], SECRET);
+        }
+
+        //request
+        $query = [
+            'where' => [
+                ['id', '=', $id]
+            ]
+        ];
+
+        $results = $this->model->update($query, $post);
+
+        if(array_key_exists('errors', $results) && !$this->json_request()) {
+            $errors = [];
+            foreach($results['errors'] as $key => $value) {
+                foreach ($value as $k => $v) {
+                    array_push($errors, $k);
+                }
+            }
+            $errors = implode(',', $errors);
+            header('Location: /' . $this->model_name . '/' . $id . '/edit?errors='.$errors);
+        } else if(array_key_exists('data', $results) && $results['data'] == true && !$this->json_request()) {
+            header('Location: /' . $this->model_name . '/' . $id . '/edit');
+        } else {
+            $this->load_view($this->model_name . '/' . $id . '/edit', $parent_template, $results);
+        }
+    }
+
+    /**
+     * @param null $id
+     */
+    public function delete($id = null)
+    {
+        //request
+        $query = [
+            'where' => [
+                ['id', '=', $id]
+            ]
+        ];
+        $results = $this->model->delete($query);
+
+        if(array_key_exists('errors', $results) && !$this->json_request()) {
+            $errors = [];
+            foreach($results['errors'] as $key => $value) {
+                foreach ($value as $k => $v) {
+                    array_push($errors, $k);
+                }
+            }
+            $errors = implode(',', $errors);
+            header('Location: /' . $this->model_name . '/?errors='.$errors);
+        } else if(array_key_exists('data', $results) && $results['data'] == true && !$this->json_request()) {
+            header('Location: /' . $this->model_name);
+        } else {
+            $this->load_view($this->model_name, $parent_template, $results);
+        }
+    }
 }
