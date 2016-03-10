@@ -25,8 +25,27 @@
                         </tbody>
                     </table>
                 </div>
+                <?php }
+                if(array_key_exists('related', $data)) {?>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Model</th>
+                                <th>&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach($data['related'] as $key => $value) { ?>
+                                <tr>
+                                    <td><?php echo $value; ?></td>
+                                    <td><a href="<?php echo $url . '/' . $value; ?>">View</a></td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
                 <?php } ?>
-
             </div>
         </div>
     </div>

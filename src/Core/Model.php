@@ -42,6 +42,11 @@ class Model
     protected $params_default = ['page' => 1, 'limit' => 100, 'order' => 'id', 'sort' => 'asc', 'q' => null];
 
     /**
+     * @var array
+     */
+    protected $related_models = [];
+
+    /**
      * @var \PDO
      */
     protected $db;
@@ -114,11 +119,6 @@ class Model
 
         //append to query
         $query_end = ' ORDER BY ' . $params['order'] . ' ' . $params['sort'] . ' LIMIT ' . $params['limit'] . ' OFFSET ' . (($params['page'] - 1) * $params['limit']);
-
-//        echo '<pre>';
-//        var_dump(($query . $query_end));
-//        echo '</pre>';
-//        die();
 
         //add table name
         $query = str_replace(':table', $this->table, $query);
@@ -228,7 +228,7 @@ class Model
      * @param bool $select_all
      * @return array
      */
-    public function read($query_args = [], $select_all = false)
+    public function read($query_args = [], $select_all = false, $show_related_models = true)
     {
         if(count($query_args) == 0) {
             header('HTTP/1.0 404 Not Found');
@@ -264,6 +264,10 @@ class Model
             header('HTTP/1.0 404 Not Found');
             array_push($errors, ['Not Found' => 'Entry does not exist.']);
             return ['errors' => $errors];
+        }
+
+        if($show_related_models) {
+            return ['data' => $results, 'related' => $this->related_models];
         }
 
         return ['data' => $results];

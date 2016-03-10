@@ -42,6 +42,10 @@ class UsersModel extends Model
      */
     protected $fields_viewable = ['id', 'email', 'role', 'first_name', 'last_name'];
 
+    /**
+     * @var array
+     */
+    protected $related_models = ['items'];
 
     /**
      * UsersModel constructor.
