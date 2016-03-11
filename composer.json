@@ -17,6 +17,7 @@
     },
     "require": {
         "phroute/phroute": "^2.1",
-        "fzaninotto/faker": "^1.5"
+        "fzaninotto/faker": "^1.5",
+        "mailgun/mailgun-php": "~1.7.2"
     }
-}
+}s
