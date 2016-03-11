@@ -3,8 +3,7 @@
     "description": "Basic mvc template for php",
     "authors": [
         {
-            "name": "Manuel Pineault",
-            "email": "manuel.pineault@gmail.com"
+            "name": "Manuel Pineault"
         }
     ],
     "autoload": {
