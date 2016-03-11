@@ -9,6 +9,7 @@
 namespace App\Controllers\Auth;
 
 use App\Core\Controller;
+use Mailgun\Mailgun;
 
 class AuthController extends Controller
 {
@@ -23,6 +24,11 @@ class AuthController extends Controller
     private $reset;
 
     /**
+     * @var
+     */
+    private $mailgun;
+
+    /**
      * AuthController constructor.
      */
     public function __construct()
@@ -32,6 +38,7 @@ class AuthController extends Controller
         $model = new \App\Models\UsersModel();
         $this->jwt = new \App\Controllers\Auth\JWTController;
         $this->reset = new \App\Models\ResetModel();
+        $this->mailgun = new Mailgun(MAILGUN_KEY);
         parent::__construct($model);
     }
 
@@ -247,6 +254,13 @@ class AuthController extends Controller
                 'user_id' => $results['data']['id'],
                 'token' => hash_hmac('sha256', $results['data']['email'] . date('Y-m-d H:i:s', time()), SECRET)
             ];
+
+            //mailgun
+            $this->mailgun->sendMessage(MAILGUN_DOMAIN,
+                array('from'    => 'Automatic Message <' . MAILGUN_FROM . '>',
+                    'to'      => $results['data']['first_name'].' <'.$results['data']['email'].'>',
+                    'subject' => 'Password Reset',
+                    'text'    => 'Please follow this link for a password reset: '. HOST_URL . '/auth/resetpassword/' . $args['token']));
 
             $this->reset->create($args);
         }
