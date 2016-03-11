@@ -48,17 +48,23 @@ class Controller
 
     /**
      * @param array $query
+     * @param bool $select
+     * @param bool $return
+     * @return mixed
      */
-    public function _index($query = [])
+    public function _index($query = [], $select = false, $return = false)
     {
         //request
         $query['params'] = $this->model->helper_paramscleanup($_GET);
 
-        $results = $this->model->all($query);
-
-        //load view
-        $parent_template = ($this->json_request()) ? 'json' : $this->parent_template;
-        $this->load_view($this->template_dir . '/all', $parent_template, $results);
+        $results = $this->model->all($query, $select);
+        if($return) {
+            return $results;
+        } else {
+            //load view
+            $parent_template = ($this->json_request()) ? 'json' : $this->parent_template;
+            $this->load_view($this->template_dir . '/all', $parent_template, $results);
+        }
     }
 
     /**
@@ -111,16 +117,22 @@ class Controller
      * @param null $query
      * @param null $template
      * @param null $parent_template
+     * @param bool $return
+     * @return mixed
      */
-    public function _read($query = null, $template = null, $parent_template = null)
+    public function _read($query = null, $template = null, $parent_template = null, $return = false)
     {
         $results = $this->model->read($query);
 
-        //load view
-        $template = ($template == null) ? $this->template_dir . '/read' : $template;
-        $parent = ($this->json_request()) ? 'json' : $this->parent_template;
-        $parent_template = ($parent_template == null) ? $parent : $parent_template;
-        $this->load_view($template, $parent_template, $results);
+        if($return) {
+            return $results;
+        } else {
+            //load view
+            $template = ($template == null) ? $this->template_dir . '/read' : $template;
+            $parent = ($this->json_request()) ? 'json' : $this->parent_template;
+            $parent_template = ($parent_template == null) ? $parent : $parent_template;
+            $this->load_view($template, $parent_template, $results);
+        }
     }
 
     /**

@@ -1,25 +1,32 @@
 <?php
-
 /**
  * Created by PhpStorm.
  * User: manuelpineault
- * Date: 2016-02-23
- * Time: 2:36 PM
+ * Date: 2016-03-11
+ * Time: 10:07 AM
  */
+
 namespace App\Controllers;
+
 
 use App\Core\Controller;
 
-class UsersController extends Controller
+class ItemsTagsController extends Controller
 {
+    /**
+     * @var
+     */
+    private $tags;
+
     /**
      * UsersController constructor.
      */
     public function __construct()
     {
-        $this->model_name = 'users';
+        $this->model_name = 'itemstags';
         $this->template_dir = 'templates';
-        $model = new \App\Models\UsersModel();
+        $model = new \App\Models\ItemsTagsModel();
+        $this->tags = new \App\Models\TagsModel();
         parent::__construct($model);
     }
 
@@ -28,19 +35,16 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $q = null;
-        $query = [];
-        if(array_key_exists('q', $_GET) && $_GET['q'] != null) {
-            $query = [
-                'where' => [
-                    ['email', 'LIKE', '%' . $_GET['q'] . '%', 'OR'],
-                    ['first_name', 'LIKE', '%' . $_GET['q'] . '%', 'OR'],
-                    ['last_name', 'LIKE', '%' . $_GET['q'] . '%', 'OR']
-                ]
-            ];
-        }
+        $this->_index();
+    }
 
-        $this->_index($query);
+    /**
+     * @param $id
+     */
+    public function itemstags($id)
+    {
+        $query = ['query' => 'FROM :table INNER JOIN tags as t ON :table.tag_id = t.id WHERE :table.item_id='. $id];
+        $this->_index($query, ['t.id', 'name']);
     }
 
     /**
@@ -57,10 +61,6 @@ class UsersController extends Controller
     public function create()
     {
         $args = $this->get_payload();
-        $args['created'] = $args['modified'] = date('Y-m-d H:i:s', time());
-        if(array_key_exists('password', $args)) {
-            $args['password'] = hash_hmac('sha256', $args['password'], SECRET);
-        }
         $this->_create($args);
     }
 
@@ -104,10 +104,6 @@ class UsersController extends Controller
         ];
 
         $args = $this->get_payload();
-        $args['modified'] = date('Y-m-d H:i:s', time());
-        if(array_key_exists('password', $args)) {
-            $args['password'] = hash_hmac('sha256', $args['password'], SECRET);
-        }
         $this->_update($query, $args);
     }
 

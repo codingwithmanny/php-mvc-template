@@ -1,25 +1,25 @@
 <?php
-
 /**
  * Created by PhpStorm.
  * User: manuelpineault
- * Date: 2016-02-23
- * Time: 2:36 PM
+ * Date: 2016-03-10
+ * Time: 10:50 PM
  */
+
 namespace App\Controllers;
 
 use App\Core\Controller;
 
-class UsersController extends Controller
+class TagsController extends Controller
 {
     /**
      * UsersController constructor.
      */
     public function __construct()
     {
-        $this->model_name = 'users';
+        $this->model_name = 'tags';
         $this->template_dir = 'templates';
-        $model = new \App\Models\UsersModel();
+        $model = new \App\Models\TagsModel();
         parent::__construct($model);
     }
 
@@ -33,9 +33,7 @@ class UsersController extends Controller
         if(array_key_exists('q', $_GET) && $_GET['q'] != null) {
             $query = [
                 'where' => [
-                    ['email', 'LIKE', '%' . $_GET['q'] . '%', 'OR'],
-                    ['first_name', 'LIKE', '%' . $_GET['q'] . '%', 'OR'],
-                    ['last_name', 'LIKE', '%' . $_GET['q'] . '%', 'OR']
+                    ['name', 'LIKE', '%' . $_GET['q'] . '%'],
                 ]
             ];
         }
@@ -58,9 +56,6 @@ class UsersController extends Controller
     {
         $args = $this->get_payload();
         $args['created'] = $args['modified'] = date('Y-m-d H:i:s', time());
-        if(array_key_exists('password', $args)) {
-            $args['password'] = hash_hmac('sha256', $args['password'], SECRET);
-        }
         $this->_create($args);
     }
 

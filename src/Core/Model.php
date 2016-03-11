@@ -68,13 +68,13 @@ class Model
 
     /**
      * @param $query_args
-     * @param bool $select_all
+     * @param bool $select
      * @return array|string
      */
-    public function all($query_args = [], $select_all = false)
+    public function all($query_args = [], $select = false)
     {
         $query = 'SELECT ';
-        $query .= ($select_all) ? '* ' : $this->helper_viewable() . ' ';
+        $query .= (gettype($select) == 'array' && count($select) > 0) ? implode(',', $select) . ' ' : $this->helper_viewable() . ' ';
         $values = [':table' => $this->table];
         $params = [];
         $errors = [];
@@ -118,7 +118,7 @@ class Model
         }
 
         //append to query
-        $query_end = ' ORDER BY ' . $params['order'] . ' ' . $params['sort'] . ' LIMIT ' . $params['limit'] . ' OFFSET ' . (($params['page'] - 1) * $params['limit']);
+        $query_end = ' ORDER BY ' . $this->table . '.' . $params['order'] . ' ' . $params['sort'] . ' LIMIT ' . $params['limit'] . ' OFFSET ' . (($params['page'] - 1) * $params['limit']);
 
         //add table name
         $query = str_replace(':table', $this->table, $query);

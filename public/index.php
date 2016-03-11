@@ -29,7 +29,29 @@ $router->post('/items/{id}', ['App\Controllers\ItemsController', 'update']);
 
 //user items
 $router->get('/users/{user_id}/items', ['App\Controllers\UserItemsController', 'index']);
-$router->get('/users/{user_id}/items/{id}', ['App\Controllers\ItemsController', 'read']);
+
+//tags
+$router->get('/tags', ['App\Controllers\TagsController', 'index']);
+$router->get('/tags/create', ['App\Controllers\TagsController', 'create_form']);
+$router->post('/tags', ['App\Controllers\TagsController', 'create']);
+$router->get('/tags/{id}', ['App\Controllers\TagsController', 'read']);
+$router->get('/tags/{id}/delete', ['App\Controllers\TagsController', 'delete']);
+$router->get('/tags/{id}/edit', ['App\Controllers\TagsController', 'update_form']);
+$router->post('/tags/{id}', ['App\Controllers\TagsController', 'update']);
+
+//item tags
+$router->get('/itemstags/', ['App\Controllers\ItemsTagsController', 'index']);
+$router->get('/itemstags/create', ['App\Controllers\ItemsTagsController', 'create_form']);
+$router->post('/itemstags', ['App\Controllers\ItemsTagsController', 'create']);
+$router->get('/itemstags/{id}', ['App\Controllers\ItemsTagsController', 'read']);
+$router->get('/itemstags/{id}/delete', ['App\Controllers\ItemsTagsController', 'delete']);
+$router->get('/itemstags/{id}/edit', ['App\Controllers\ItemsTagsController', 'update_form']);
+$router->post('/itemstags/{id}', ['App\Controllers\ItemsTagsController', 'update']);
+
+
+
+$router->get('/items/{id}/tags', ['App\Controllers\ItemsTagsController', 'itemstags']);
+
 
 //auth
 $router->get('/auth/register', ['App\Controllers\Auth\AuthController', 'register_form']);

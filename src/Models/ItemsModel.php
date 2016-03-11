@@ -43,6 +43,10 @@ class ItemsModel extends Model
      */
     protected $fields_viewable = ['id', 'user_id', 'name', 'description', 'lat', 'lng'];
 
+    /**
+     * @var array
+     */
+    protected $related_models = ['tags'];
 
     /**
      * UsersModel constructor.

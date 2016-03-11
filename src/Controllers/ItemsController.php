@@ -29,10 +29,17 @@ class ItemsController extends Controller
     public function index()
     {
         $q = null;
+        $query = [];
         if(array_key_exists('q', $_GET) && $_GET['q'] != null) {
-            $q = 'FROM :table WHERE name LIKE \'%' . $_GET['q'] . '%\' OR description LIKE \'%' . $_GET['q'] . '%\'';
+            $query = [
+                'where' => [
+                    ['name', 'LIKE', '%' . $_GET['q'] . '%', 'OR'],
+                    ['description', 'LIKE', '%' . $_GET['q'] . '%', 'OR']
+                ]
+            ];
         }
-        $this->_index($q);
+
+        $this->_index($query);
     }
 
     /**
