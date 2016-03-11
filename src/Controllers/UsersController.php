@@ -29,10 +29,19 @@ class UsersController extends Controller
     public function index()
     {
         $q = null;
+        $query = [];
         if(array_key_exists('q', $_GET) && $_GET['q'] != null) {
-            $q = 'FROM :table WHERE email LIKE \'%' . $_GET['q'] . '%\' OR first_name LIKE \'%' . $_GET['q'] . '%\' OR last_name LIKE \'%' . $_GET['q'] . '%\'';
+            $query = [
+                'where' => [
+                    ['email', 'LIKE', '%' . $_GET['q'] . '%', 'OR'],
+                    ['first_name', 'LIKE', '%' . $_GET['q'] . '%', 'OR'],
+                    ['last_name', 'LIKE', '%' . $_GET['q'] . '%', 'OR']
+                ]
+            ];
         }
-        $this->_index($q);
+
+        //            $q = 'FROM :table WHERE email LIKE \'%' . $_GET['q'] . '%\' OR first_name LIKE \'%' . $_GET['q'] . '%\' OR last_name LIKE \'%' . $_GET['q'] . '%\'';
+        $this->_index($query);
     }
 
     /**

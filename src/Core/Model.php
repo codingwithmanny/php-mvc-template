@@ -226,6 +226,7 @@ class Model
     /**
      * @param array $query_args
      * @param bool $select_all
+     * @param bool $show_related_models
      * @return array
      */
     public function read($query_args = [], $select_all = false, $show_related_models = true)
@@ -343,6 +344,7 @@ class Model
         $query = 'DELETE ';
         $values = [];
         $query .= 'FROM ' .$this->table;
+        $errors = [];
 
         //Simple query
         if(array_key_exists('where', $query_args)) {
@@ -361,7 +363,8 @@ class Model
     }
 
     /**
-     * @return string
+     * @param bool $array
+     * @return array|string
      */
     public function helper_viewable($array = false)
     {
@@ -369,7 +372,8 @@ class Model
     }
 
     /**
-     * @return string
+     * @param bool $array
+     * @return array|string
      */
     public function helper_required($array = false)
     {
@@ -377,7 +381,8 @@ class Model
     }
 
     /**
-     * @return string
+     * @param bool $array
+     * @return array|string
      */
     public function helper_required_options($array = false)
     {
@@ -395,10 +400,10 @@ class Model
         $errors = [];
         $query .= ' WHERE ';
         foreach ($query_args['where'] as $key => $value) {
-            if (in_array($value[0], $this->fields_all) && count($value) == 3) {
-                if($key != 0) $query .= ' AND ';
+            if (in_array($value[0], $this->fields_all) && count($value) >= 3) {
                 $query .= $value[0] . ' ' . $value[1] . ' :' . $value[0];
                 $values[':' . $value[0]] = $value[2];
+                if($key != (count($query_args['where'])-1) && count($query_args['where']) > 1) $query .= (array_key_exists(3, $value)) ? ' ' . $value[3] . ' ' : ' AND ';
             } else if(count($value) == 3) {
                 array_push($errors, [$value[0] => 'Invalid field.']);
             } else {
@@ -413,6 +418,8 @@ class Model
     /**
      * @param array $query_args
      * @param array $compare_args
+     * @param bool $compare_keys
+     * @param bool $all_required
      * @return array
      */
     public function helper_cleanup($query_args = [], $compare_args = [], $compare_keys = true, $all_required = false)

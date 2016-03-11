@@ -31,7 +31,7 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Model</th>
+                                <th>model</th>
                                 <th>&nbsp;</th>
                             </tr>
                         </thead>
@@ -50,5 +50,3 @@
         </div>
     </div>
 </article>
-
-

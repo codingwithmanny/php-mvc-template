@@ -47,16 +47,12 @@ class Controller
     }
 
     /**
-     * @param null $q
+     * @param array $query
      */
-    public function _index($q = null, $query = [])
+    public function _index($query = [])
     {
         //request
         $query['params'] = $this->model->helper_paramscleanup($_GET);
-
-        if($q != null) {
-            $query['query'] = $q;
-        }
 
         $results = $this->model->all($query);
 
