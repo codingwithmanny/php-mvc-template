@@ -90,6 +90,28 @@ class View
         $form_fields = [];
         foreach($fields as $key => $value) {
             switch($value['type']) {
+                case 'select':
+                    $form_fields[$key] = '<select ';
+                    $form_fields[$key] .= 'name="' . $key . '" ';
+                    if(array_key_exists('attributes', $value)) {
+                        foreach($value['attributes'] as $k => $v) {
+                            $form_fields[$key] .= $k . '="' . $v . '" ';
+                        }
+                    }
+
+                    $form_fields[$key] .= '>';
+                    $form_fields[$key] .= '<option value="">Select ' . $key . '</option>';
+                    foreach($fields[$key]['options']['data'] as $optkey => $optval) {
+                        $form_fields[$key] .= '<option value="'. $optval[$fields[$key]['option_id']] . '" ';
+
+                        if($data != null && array_key_exists($key, $data) && $optval[$fields[$key]['option_id']] == $data[$key]) {
+                            $form_fields[$key] .= 'selected="selected"';
+                        }
+
+                        $form_fields[$key] .= '>' . $optval[$fields[$key]['option_name']] . '</option>';
+                    }
+                    $form_fields[$key] .= '</select>';
+                break;
                 default:
                     $form_fields[$key] = '<input type="' . $value['type'] . '" ';
                     $form_fields[$key] .= 'name="' . $key . '" ';

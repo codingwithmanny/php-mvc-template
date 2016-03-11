@@ -483,4 +483,15 @@ class Model
         if(count($query_args) == 0) return [];
         return $this->helper_cleanup($query_args, $this->fields_all, false);
     }
+
+    /**
+     * @param $model
+     * @param $select
+     */
+    public function helper_getmodelvalues($model, $select = false)
+    {
+        $classname = '\App\Models\\' . $model;
+        $m = new $classname;
+        return $m->all([], $select);
+    }
 }
