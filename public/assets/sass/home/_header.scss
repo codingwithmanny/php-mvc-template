@@ -1,0 +1,41 @@
+header {
+  .dropdown-menu {
+    width: 100%;
+    overflow: hidden;
+    border: 0 !important;
+    padding: 5px 0 0 !important;
+    margin: -2px 0 0 !important;
+    min-width: 400px !important;
+    @include border-radius(0 0 2px 2px !important);
+
+    li {
+      border-top: 1px solid $grey2;
+
+      &:first-child {
+        border: 0;
+      }
+    }
+
+    a {
+      background: #f7f7f7;
+      color: $text-color !important;
+      padding: 15px 20px !important;
+
+      &:hover, &:focus {
+        color: $white !important;
+        background: $pink !important;
+
+        i.fa {
+          color: #ffc3b9;
+        }
+      }
+    }
+
+    i.fa {
+      float: left;
+      color: $black;
+      font-size: 20px;
+      margin: 0 18px 0 0;
+    }
+  }
+}

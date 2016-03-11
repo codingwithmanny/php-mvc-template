@@ -1,0 +1,244 @@
+#mainNav {
+  .logo-black {
+    display: none;
+  }
+  .logo-white {
+    display: block;
+  }
+  @media (min-width: 768px) {
+
+  }
+}
+
+#mainNav.white {
+  background: rgba(255,255,255,1);
+  .logo-white {
+    display: none;
+  }
+  .logo-black {
+    display: block;
+  }
+
+  ul {
+    li {
+      a {
+        color: #707579;
+        &:hover {
+          color: #111820;
+        }
+      }
+    }
+  }
+}
+
+.inner-navbar {
+  margin: 0;
+  background: $white;
+  position: relative !important;
+}
+
+.navbar {
+  width: 100%;
+  padding: 22px 0;
+  z-index: 10;
+  @include border-radius(0 !important);
+}
+
+.navbar-default {
+  font-family: 'Lato', sans-serif;
+  background-color: none !important;
+  -webkit-transition: all .35s;
+  -moz-transition: all .35s;
+  transition: all .35s;
+
+  .navbar-header .navbar-brand {
+    text-transform: uppercase;
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    color: #f05f40;
+
+    img {
+      width: 106px;
+      height: 21px;
+    }
+
+    .logo-white {
+      display: none;
+    }
+
+    .logo-black {
+      display: block;
+    }
+
+    &:hover, &:focus {
+      color: #eb3812;
+    }
+  }
+
+  .nav > li {
+    a {
+      color: #b1b1b1;
+      font-size: 14px;
+
+      &:hover, &:focus {
+        color: #fff;
+      }
+
+      @media (max-width: 769px) {
+        color: $black !important;
+
+        &:hover, &:active {
+          color: $pink !important;
+        }
+      }
+    }
+
+    &.active > a {
+      color: #fff;
+      background: none !important;
+
+      &:focus {
+        color: #fff;
+        background: none !important;
+      }
+
+      &:hover {
+        background: none !important;
+      }
+    }
+  }
+}
+.right-menu {
+
+  li {
+    float: left;
+    display: inline-block;
+    text-decoration: none;
+
+    a {
+      float: left;
+      padding: 12px 20px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 14px;
+
+      &:hover, &:focus {
+        color: #fff;
+        text-decoration: none;
+
+        @media (max-width: 768px) {
+          background: none;
+        }
+      }
+
+      @media (max-width: 768px) {
+        background: none;
+        padding: 10px 0 !important;
+        color: $black !important;
+
+        &:hover, &:active {
+          color: $pink !important;
+        }
+
+        &.btn-pink {
+          width: 100%;
+          background: $pink;
+          color: $white !important;
+          padding: 10px !important;
+
+          &:hover, &:focus {
+            color: $black !important;
+            background: $grey;
+          }
+        }
+      }
+    }
+
+    &.active > a {
+      color: #fff;
+      background-color: transparent;
+
+      &:focus {
+        color: #fff;
+        background-color: transparent;
+      }
+
+      &:hover {
+        background-color: transparent;
+      }
+    }
+
+    @media (max-width: 768px) {
+      width: 100%;
+      display: block;
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding-left: 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .navbar-default {
+    border-color: rgba(255, 255, 255, 0.1);
+    background-color: transparent;
+
+    .navbar-header .navbar-brand {
+      color: rgba(255, 255, 255, 0.7);
+
+      &:hover, &:focus {
+        color: #fff;
+      }
+    }
+    .nav > li > a {
+      color: rgba(255, 255, 255, 0.7);
+
+      &:focus {
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      &:hover, &:focus {
+        color: #fff;
+      }
+    }
+
+    &.affix {
+      .navbar-header .navbar-brand {
+        font-size: 14px;
+      }
+
+      .nav > li > a {
+        color: #707579;
+
+        &:focus {
+          color: $black;
+        }
+
+        &:hover, &:focus {
+          color: $black;
+        }
+      }
+
+      .nav > li.active > a {
+        color: $black;
+      }
+
+      .right-menu {
+        li > a {
+          color: #707579;
+
+          &:focus {
+            color: $black;
+          }
+          &:hover, &:focus {
+            color: $black;
+          }
+        }
+
+        .nav > li.active > a {
+          color: $black;
+        }
+      }
+    }
+  }
+}

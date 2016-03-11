@@ -1,0 +1,9 @@
+config/config.php
+
+.sass-cache/*
+
+public/.sass-cache/*
+
+/vendor/
+
+bower_components/*
