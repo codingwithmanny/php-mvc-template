@@ -67,7 +67,7 @@ class AuthController extends Controller
             $post = json_decode($request_body, true);
         }
         $post = $this->model->helper_fieldscleanup($post);
-        $post['created'] = $post['modified'] = date('Y-m-d H:i:s');
+        $post['created'] = $post['modified'] = date('Y-m-d H:i:s', time());
         if(array_key_exists('password', $post)) {
             $post['password'] = hash_hmac('sha256', $post['password'], SECRET);
         }
@@ -187,22 +187,38 @@ class AuthController extends Controller
      */
     public function self()
     {
-        if(array_key_exists('WEBTOKEN', $_SESSION)) {
-            if($this->jwt->validate_token($_SESSION['WEBTOKEN'])) {
-                $name = $this->jwt->get_name($_SESSION['WEBTOKEN']);
-                $query = [
-                    'where' => [
-                        ['first_name', '=', $name[0]],
-                        ['last_name', '=', $name[1]]
-                    ]
-                ];
-
-                $results = $this->model->read($query);
-                if (!array_key_exists('errors', $results)) {
-                    return $results;
-                }
+        $webtoken = false;
+        if($this->jwt->json_request()) {
+            $headers = getallheaders();
+            if(!array_key_exists('WEBTOKEN', $headers) || !$this->jwt->validate_token($headers['WEBTOKEN'])) {
+                return false;
+            } else {
+                $webtoken = $headers['WEBTOKEN'];
+            }
+        } else {
+            if(!isset($_SESSION) || !array_key_exists('WEBTOKEN', $_SESSION) || !$this->jwt->validate_token($_SESSION['WEBTOKEN'])) {
+                unset($_SESSION['WEBTOKEN']);
+                return false;
+            } else {
+                $webtoken = $_SESSION['WEBTOKEN'];
             }
         }
+
+        if($webtoken != false) {
+            $email = $this->jwt->get_email($webtoken);
+            $query = [
+                'where' => [
+                    ['email', '=', $email[0]]
+                ]
+            ];
+
+            $results = $this->model->read($query);
+            if (!array_key_exists('errors', $results)) {
+                return $results;
+            }
+
+        }
+
         return false;
     }
 
@@ -371,9 +387,29 @@ class AuthController extends Controller
         }
     }
 
-    public function is_admin()
+    /**
+     * @param $action
+     * @param $access
+     */
+    public function authorize($action, $access)
     {
-//        @TODO
+        $self = $this->self();
+        if($self == false) {
+            header('HTTP/1.1 401 Unauthorized');
+            exit();
+        }
+
+        foreach($access as $key => $value) {
+            if(!array_key_exists($key, $self['data'])
+                || (array_key_exists($key, $self['data']) && $self['data'][$key] != $value)) {
+                unset($access[$key]);
+            }
+        }
+
+        if(count($access) == 0) {
+            header('HTTP/1.1 401 Unauthorized');
+            exit();
+        }
     }
 
     /**

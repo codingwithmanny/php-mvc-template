@@ -5,7 +5,7 @@
     <databaseInfo>
         <version>134481920</version>
         <UUID>909C024A-7EFB-4270-9841-06B59044F358</UUID>
-        <nextObjectID>142</nextObjectID>
+        <nextObjectID>143</nextObjectID>
         <metadata>
             <plist version="1.0">
                 <dict>
@@ -104,7 +104,7 @@
         <attribute name="name" type="string">GET users</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM"></relationship>
         <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
-        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z103 z109 z110"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z143 z103 z109 z110"></relationship>
     </object>
     <object type="LMENVIRONMENTVARIABLEVALUE" id="z107">
         <attribute name="value" type="string">http://localhost:8888/api</attribute>
@@ -117,9 +117,9 @@
         <attribute name="name" type="string">Default Jar</attribute>
     </object>
     <object type="LMKEYVALUE" id="z109">
-        <attribute name="value" type="string"></attribute>
+        <attribute name="value" type="string">eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYifQ==.eyJpc3MiOiJsb2NhbGhvc3QiLCJleHAiOjE0NjAzMTI4MTAsImVtYWlsIjoibWFudWVsLnBpbmVhdWx0QGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiJ9.1255ef7ee858f66191ba9b7e65d8fbde28e19b7231e7837dc5a990574ab9b26b</attribute>
         <attribute name="order" type="int64">2</attribute>
-        <attribute name="name" type="string"></attribute>
+        <attribute name="name" type="string">WEBTOKEN</attribute>
         <attribute name="enabled" type="bool">1</attribute>
         <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
         <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
@@ -365,7 +365,7 @@
         <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z127"></relationship>
     </object>
     <object type="LMREQUEST" id="z131">
-        <attribute name="body" type="string">[{"data":{"json":"{\\"email\\":\\"admin1@example.com\\",\\"password\\":\\"11111111\\"}"},"identifier":"com.luckymarmot.JSONDynamicValue"}]</attribute>
+        <attribute name="body" type="string">[{"data":{"json":"{\\"email\\":\\"manuel.pineault@gmail.com\\",\\"password\\":\\"22222222\\"}"},"identifier":"com.luckymarmot.JSONDynamicValue"}]</attribute>
         <attribute name="uuid" type="string">8086399F-75AD-4FDF-BCE5-8AAE94D9198A</attribute>
         <attribute name="url" type="string">[{"data":{"environmentVariable":"53580366-3406-4A8C-9188-9A1A420CAB04"},"identifier":"com.luckymarmot.EnvironmentVariableDynamicValue"},"\\/auth\\/login"]</attribute>
         <attribute name="storecookies" type="bool">1</attribute>
@@ -501,5 +501,15 @@
         <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
         <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
         <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z141"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z143">
+        <attribute name="value" type="string"></attribute>
+        <attribute name="order" type="int64">3</attribute>
+        <attribute name="name" type="string"></attribute>
+        <attribute name="enabled" type="bool">1</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z106"></relationship>
     </object>
 </database>

@@ -48,10 +48,8 @@ $router->get('/itemstags/{id}/delete', ['App\Controllers\ItemsTagsController', '
 $router->get('/itemstags/{id}/edit', ['App\Controllers\ItemsTagsController', 'update_form']);
 $router->post('/itemstags/{id}', ['App\Controllers\ItemsTagsController', 'update']);
 
-
-
+//items-tags
 $router->get('/items/{id}/tags', ['App\Controllers\ItemsTagsController', 'itemstags']);
-
 
 //auth
 $router->get('/auth/register', ['App\Controllers\Auth\AuthController', 'register_form']);

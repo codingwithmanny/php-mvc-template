@@ -33,6 +33,11 @@ class Controller
     protected $parent_template = 'default';
 
     /**
+     * @var bool
+     */
+    protected $middleware = false;
+
+    /**
      * Controller constructor.
      * @param null $model
      */

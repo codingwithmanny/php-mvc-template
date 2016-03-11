@@ -20,6 +20,7 @@ class UsersController extends Controller
         $this->model_name = 'users';
         $this->template_dir = 'templates';
         $model = new \App\Models\UsersModel();
+        $this->middleware = new \App\Controllers\Auth\AuthController();
         parent::__construct($model);
     }
 
@@ -28,6 +29,10 @@ class UsersController extends Controller
      */
     public function index()
     {
+        if($this->middleware != false) {
+            $this->middleware->authorize('index', ['role' => 'admin']);
+        }
+
         $q = null;
         $query = [];
         if(array_key_exists('q', $_GET) && $_GET['q'] != null) {
@@ -56,6 +61,10 @@ class UsersController extends Controller
      */
     public function create()
     {
+        if($this->middleware != false) {
+            $this->middleware->authorize('index', ['role' => 'admin']);
+        }
+
         $args = $this->get_payload();
         $args['created'] = $args['modified'] = date('Y-m-d H:i:s', time());
         if(array_key_exists('password', $args)) {
@@ -84,6 +93,10 @@ class UsersController extends Controller
      */
     public function update_form($id)
     {
+        if($this->middleware != false) {
+            $this->middleware->authorize('update_form', ['role' => 'admin', 'id' => $id]);
+        }
+
         $query = [
             'where' => [
                 ['id', '=', $id]
@@ -97,6 +110,10 @@ class UsersController extends Controller
      */
     public function update($id = null)
     {
+        if($this->middleware != false) {
+            $this->middleware->authorize('update_form', ['role' => 'admin', 'id' => $id]);
+        }
+
         $query = [
             'where' => [
                 ['id', '=', $id]
@@ -116,6 +133,10 @@ class UsersController extends Controller
      */
     public function delete($id = null)
     {
+        if($this->middleware != false) {
+            $this->middleware->authorize('delete', ['role' => 'admin']);
+        }
+
         //request
         $query = [
             'where' => [

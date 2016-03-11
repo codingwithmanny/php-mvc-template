@@ -45,12 +45,10 @@ class JWTController extends Controller
         }
 
         if($payload['exp'] > time()) { //valid time
-            $name = explode(' ', $payload['name']);
             //request
             $query = [
                 'where' => [
-                    ['first_name', '=', $name[0]],
-                    ['last_name', '=', $name[1]]
+                    ['email', '=', $payload['email']]
                 ]
             ];
             $user = $this->model->read($query);
@@ -73,13 +71,13 @@ class JWTController extends Controller
      * @param bool $token
      * @return array|bool
      */
-    public function get_name($token = false)
+    public function get_email($token = false)
     {
         $jwt = explode('.', $token);
         if(count($jwt) == 3) {
             $payload = json_decode(base64_decode($jwt[1]), true);
-            if(array_key_exists('name', $payload)) {
-                return explode(' ', $payload['name']);
+            if(array_key_exists('email', $payload)) {
+                return explode(' ', $payload['email']);
             }
         }
 
@@ -96,7 +94,7 @@ class JWTController extends Controller
 
         if(array_key_exists('data', $user)) {
             $header = base64_encode(json_encode(['type' => 'JWT', 'alg' => 'HS256']));
-            $payload = base64_encode(json_encode(['iss' => ISSUER, 'exp' => (time() + (30 * 24 * 60 * 60)), 'name' => $user['data']['first_name'] . ' ' . $user['data']['last_name'], 'role' => $user['data']['role']]));
+            $payload = base64_encode(json_encode(['iss' => ISSUER, 'exp' => (time() + (30 * 24 * 60 * 60)), 'email' => $user['data']['email'], 'role' => $user['data']['role']]));
             $encoded_string = $header . '.' . $payload;
             $encoded_string = hash_hmac('sha256', $encoded_string, SECRET);
 
