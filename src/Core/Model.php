@@ -275,11 +275,12 @@ class Model
     }
 
     /**
-     * @param array $data_args
      * @param array $query_args
+     * @param array $data_args
+     * @param bool $role
      * @return array
      */
-    public function update($query_args = [], $data_args = [])
+    public function update($query_args = [], $data_args = [], $role = false)
     {
         if(count($data_args) == 0) {
             header('HTTP/1.1 412 Precondition Failed');
@@ -292,6 +293,29 @@ class Model
         if(!array_key_exists('data', $this->read($query_args))) {
             header('HTTP/1.0 404 Not Found');
             return ['errors' => ['Not Found' => 'Entry does not exist.']];
+        }
+
+        $errors = [];
+        //validate if keys exists
+        foreach ($data_args as $key => $value) {
+            if(!in_array($key, $this->fields_all)) {
+                array_push($errors, [$key => 'Invalid field.']);
+            }
+        }
+
+        //validate role required fields
+        $fields = $this->fields_required_options;
+        foreach ($data_args as $key => $value) {
+            if (array_key_exists($key, $fields)
+                && ($role == false
+                    || (array_key_exists('role', $fields[$key]) && $role != $fields[$key]['role']))) {
+                array_push($errors, [$key => 'Invalid field.']);
+            }
+        }
+
+        if((count($errors) > 0)) {
+            header('HTTP/1.1 412 Precondition Failed');
+            return ['errors' => $errors];
         }
 
         $query = 'UPDATE ';
@@ -384,9 +408,15 @@ class Model
      * @param bool $array
      * @return array|string
      */
-    public function helper_required_options($array = false)
+    public function helper_required_options($array = false, $role = false)
     {
-        return ($array) ? $this->fields_required_options : implode(', ', $this->fields_required_options);
+        $fields = $this->fields_required_options;
+        foreach ($fields as $key => $value) {
+            if(array_key_exists('role', $value) && ($role == false || $role != $value['role'])) {
+                unset($fields[$key]);
+            }
+        }
+        return ($array) ? $fields : implode(', ', $fields);
     }
 
     /**

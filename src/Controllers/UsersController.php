@@ -53,6 +53,9 @@ class UsersController extends Controller
      */
     public function create_form()
     {
+        if($this->middleware != false) {
+            $this->middleware->authorize('index', ['role' => 'admin']);
+        }
         $this->_create_form();
     }
 

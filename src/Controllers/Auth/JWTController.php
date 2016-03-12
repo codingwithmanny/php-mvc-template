@@ -80,6 +80,17 @@ class JWTController extends Controller
                 return explode(' ', $payload['email']);
             }
         }
+        return false;
+    }
+
+    public function get_role($token) {
+        $jwt = explode('.', $token);
+        if(count($jwt) == 3) {
+            $payload = json_decode(base64_decode($jwt[1]), true);
+            if(array_key_exists('role', $payload)) {
+                return explode(' ', $payload['role']);
+            }
+        }
 
         return false;
     }
