@@ -47,6 +47,11 @@ class View
             $this->page_vars['form_fields'] = $this->form_builder($data['fields'], $field_data);
         }
 
+        $this->page_vars['role'] = false;
+        if($data != null && array_key_exists('role', $data)) {
+            $this->page_vars['role'] = $data['role'];
+        }
+
         if($parent_template != null && $template != null) {
             $this->page_vars['template'] = $template;
         }
