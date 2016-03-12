@@ -28,6 +28,7 @@ class UsersModel extends Model
     protected $fields_required_options = [
         'email' => ['type' => 'email', 'attributes' => ['min' => 6, 'max' => 250, 'class' => 'form-control', 'placeholder' => 'Email']],
         'password' => ['type' => 'password', 'attributes' => ['min' => 8, 'max' => 250, 'class' => 'form-control', 'placeholder' => 'Password']],
+        'role' => ['type' => 'select', 'role'=>'admin', 'options' => [['id'=>'admin','name'=>'admin'], ['id'=>'other','name'=>'other']], 'option_id' => 'id', 'option_name' => 'name', 'attributes' => ['class' => 'form-control', 'placeholder' => 'Role']],
         'first_name' => ['type' => 'text', 'attributes' => ['min' => 1, 'max' => 250, 'class' => 'form-control', 'placeholder' => 'First Name']],
         'last_name' => ['type' => 'text', 'attributes' => ['min' => 1, 'max' => 250, 'class' => 'form-control', 'placeholder' => 'Last Name']]
     ];

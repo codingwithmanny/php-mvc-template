@@ -52,7 +52,7 @@ class JWTController extends Controller
                 ]
             ];
             $user = $this->model->read($query);
-            if($user) { //user exists
+            if(array_key_exists('data', $user)) { //user exists
                 if(array_key_exists('role', $payload) && $user['data']['role'] == $payload['role']) { //admin roles
                     $encoded_string = $jwt[0] . '.' . $jwt[1];
                     $encoded_string = hash_hmac('sha256', $encoded_string, SECRET);
@@ -78,6 +78,17 @@ class JWTController extends Controller
             $payload = json_decode(base64_decode($jwt[1]), true);
             if(array_key_exists('email', $payload)) {
                 return explode(' ', $payload['email']);
+            }
+        }
+        return false;
+    }
+
+    public function get_role($token) {
+        $jwt = explode('.', $token);
+        if(count($jwt) == 3) {
+            $payload = json_decode(base64_decode($jwt[1]), true);
+            if(array_key_exists('role', $payload)) {
+                return explode(' ', $payload['role']);
             }
         }
 

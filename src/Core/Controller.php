@@ -82,7 +82,11 @@ class Controller
         $parent_template = ($parent_template == null) ? $this->parent_template : $parent_template;
 
         //load view
-        $this->load_view($template, $parent_template, ['fields' => $this->model->helper_required_options(true)]);
+        $role = false;
+        if($this->middleware != false) {
+            $role = $this->middleware->get_role();
+        }
+        $this->load_view($template, $parent_template, ['fields' => $this->model->helper_required_options(true, $role)]);
     }
 
     /**
@@ -149,7 +153,12 @@ class Controller
     {
         $results = $this->model->read($query);
 
-        $results = array_merge($results, ['fields' => $this->model->helper_required_options(true)]);
+        $role = false;
+        if($this->middleware != false) {
+            $role = $this->middleware->get_role();
+        }
+
+        $results = array_merge($results, ['fields' => $this->model->helper_required_options(true, $role)]);
 
         //load view
         $template = ($template == null) ? $this->template_dir . '/edit' : $template;
@@ -170,7 +179,12 @@ class Controller
         $parent = ($this->json_request()) ? 'json' : $this->parent_template;
         $parent_template = ($parent_template == null) ? $parent : $parent_template;
 
-        $results = $this->model->update($query, $args);
+        $role = false;
+        if($this->middleware != false) {
+            $role = $this->middleware->get_role();
+        }
+
+        $results = $this->model->update($query, $args, $role);
 
         if(array_key_exists('errors', $results) && !$this->json_request()) {
             $errors = [];

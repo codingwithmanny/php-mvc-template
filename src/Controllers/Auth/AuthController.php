@@ -388,6 +388,16 @@ class AuthController extends Controller
     }
 
     /**
+     * @return bool
+     */
+    public function get_role()
+    {
+        $self = $this->self();
+        $self = (gettype($self) == 'array') ? $self : [];
+        return (array_key_exists('data', $self)) ? $self['data']['role'] : false;
+    }
+
+    /**
      * @param $action
      * @param $access
      */
