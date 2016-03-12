@@ -67,18 +67,22 @@ $(document).ready(function(){
             var model = $(this).attr('data-model');
             var dataid = $(this).attr('data-id');
             var datalabel = $(this).attr('data-label');
-            //console.log(parent);
+            var value = $(this).val();
 
             //hide input
             $(this).attr('type', 'hidden');
 
+
+            var dropdown = '<div class="dropdown"><input autocomplete="off" class="form-control" placeholder="Search for ' + id + '" type="search" id="' + id + '" value=""';
+
+            if(value != null && value != '') {
+                dropdown += 'style="display: none;"';
+            }
+
+            dropdown += ' /><ul id="' + id + '-menu" class="dropdown-menu" style="width: 100%;"></ul></div>';
+
             //add search
-            $(this).parent().append('' +
-                '<div class="dropdown">' +
-                '<input class="form-control" placeholder="Search for ' + id + '" type="search" id="' + id + '" value="" />' +
-                    '<ul id="' + id + '-menu" class="dropdown-menu" style="width: 100%;">' +
-                    '</ul>' +
-                '</div>');
+            $(this).parent().append(dropdown);
 
             //on keyup
             $('#'+id).on('keyup', function(event){
@@ -116,14 +120,42 @@ $(document).ready(function(){
                 }
             });
 
+            //when dropdown link click
             $('form').on('click', '#'+id+'-menu a', function(){
                 var data = $(this).attr('data-value');
                 var label = $(this).attr('data-label');
-                $('#'+id).parent().append('<button class="btn btn-primary">'+label+' &times;</button>');
+                $('input[name='+id+']').val(data);
+
+                var button = $('<button class="btn btn-primary">'+label+' &times;</button>');
+                button.click(function(){
+                    $('input[name='+id+']').val('');
+                    $('#' + id).show();
+                    button.remove();
+                    return false;
+                });
+                $('#' + id).parent().append(button);
                 $('#' + id).val('').hide();
                 $('#' + id + '-menu').html('').hide();
                 return false;
             });
+
+            //get existing value
+            if(value != null && value != '') {
+                ajax_request('get', '/'+model+'/'+value, null, function(data, text_status, jq_xhr) {
+                    if(data.data) {
+                        if(datalabel in data.data) {
+                            var button = $('<button class="btn btn-primary">'+data.data[datalabel]+' &times;</button>');
+                            button.click(function(){
+                                $('input[name='+id+']').val('');
+                                $('#' + id).show();
+                                button.remove();
+                                return false;
+                            });
+                            $('#' + id).parent().append(button);
+                        }
+                    }
+                });
+            }
         }
     });
 });
