@@ -22,5 +22,15 @@
         require($file);
     } ?>
 
+    <script><?php require(ROOT . '/bower_components/jquery/dist/jquery.min.js'); ?></script>
+    <script><?php require(ROOT . '/bower_components/bootstrap-sass/assets/javascripts/bootstrap.min.js'); ?></script>
+    <script>
+        <?php
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }?>
+        var webtoken = '<?php echo (isset($_SESSION) && array_key_exists('WEBTOKEN', $_SESSION)) ? $_SESSION['WEBTOKEN'] : ''; ?>';
+    </script>
+    <script src="/assets/javascripts/scripts.js"></script>
 </body>
 </html>
