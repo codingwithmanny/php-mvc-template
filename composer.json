@@ -1,5 +1,5 @@
 {
-    "name": "mpineault/mvc-template",
+    "name": "mpineault/officetag",
     "description": "Basic mvc template for php",
     "authors": [
         {
@@ -19,4 +19,4 @@
         "fzaninotto/faker": "^1.5",
         "mailgun/mailgun-php": "~1.7.2"
     }
-}s
+}

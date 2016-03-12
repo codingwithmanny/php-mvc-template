@@ -52,7 +52,7 @@ class JWTController extends Controller
                 ]
             ];
             $user = $this->model->read($query);
-            if($user) { //user exists
+            if(array_key_exists('data', $user)) { //user exists
                 if(array_key_exists('role', $payload) && $user['data']['role'] == $payload['role']) { //admin roles
                     $encoded_string = $jwt[0] . '.' . $jwt[1];
                     $encoded_string = hash_hmac('sha256', $encoded_string, SECRET);
