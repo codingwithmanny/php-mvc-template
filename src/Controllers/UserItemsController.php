@@ -31,17 +31,18 @@ class UserItemsController extends ItemsController
      */
     public function index($user_id = null)
     {
-        $q = null;
-        if(array_key_exists('q', $_GET) && $_GET['q'] != null) {
-            $q = 'FROM :table WHERE name LIKE \'%' . $_GET['q'] . '%\' OR description LIKE \'%' . $_GET['q'] . '%\'';
-        }
-
         $query = [
             'where' => [
                 ['user_id', '=', $user_id]
             ]
         ];
-        $this->_index($q, $query);
+        if(array_key_exists('q', $_GET) && $_GET['q'] != null) {
+            array_push($query['where'], ['name', 'LIKE', '%' . $_GET['q'] . '%', 'OR']);
+            array_push($query['where'], ['description', 'LIKE', '%' . $_GET['q'] . '%', 'OR']);
+        }
+
+
+        $this->_index($query);
     }
 
 
