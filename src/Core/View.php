@@ -119,6 +119,20 @@ class View
                     }
                     $form_fields[$key] .= '</select>';
                 break;
+                case 'textarea':
+                    $form_fields[$key] = '<textarea ';
+                    $form_fields[$key] .= 'name="' . $key . '" ';
+                    if(array_key_exists('attributes', $value)) {
+                        foreach($value['attributes'] as $k => $v) {
+                            $form_fields[$key] .= $k . '="' . $v . '" ';
+                        }
+                    }
+                    $form_fields[$key] .= '>';
+                    if($data != null && array_key_exists($key, $data)) {
+                        $form_fields[$key] .= $data[$key];
+                    }
+                    $form_fields[$key] .= '</textarea>';
+                break;
                 default:
                     $form_fields[$key] = '<input type="' . $value['type'] . '" ';
                     $form_fields[$key] .= 'name="' . $key . '" ';
