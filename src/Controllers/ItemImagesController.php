@@ -2,24 +2,24 @@
 /**
  * Created by PhpStorm.
  * User: manuelpineault
- * Date: 2016-03-10
- * Time: 3:04 PM
+ * Date: 2016-03-12
+ * Time: 11:25 AM
  */
 
 namespace App\Controllers;
 
 use App\Core\Controller;
 
-class ItemsController extends Controller
+class ItemImagesController extends Controller
 {
     /**
      * ItemsController constructor.
      */
     public function __construct()
     {
-        $this->model_name = 'items';
+        $this->model_name = 'itemimages';
         $this->template_dir = 'templates';
-        $model = new \App\Models\ItemsModel();
+        $model = new \App\Models\ItemImagesModel();
         parent::__construct($model);
     }
 
@@ -33,8 +33,7 @@ class ItemsController extends Controller
         if(array_key_exists('q', $_GET) && $_GET['q'] != null) {
             $query = [
                 'where' => [
-                    ['name', 'LIKE', '%' . $_GET['q'] . '%', 'OR'],
-                    ['description', 'LIKE', '%' . $_GET['q'] . '%', 'OR']
+                    ['caption', 'LIKE', '%' . $_GET['q'] . '%']
                 ]
             ];
         }
@@ -116,5 +115,59 @@ class ItemsController extends Controller
         ];
 
         $this->_delete($query);
+    }
+
+    /**
+     *
+     */
+    public function upload()
+    {
+        $header = $_SERVER['SERVER_PROTOCOL'] . ' 412 Precondition Failed';
+        $json = ['data' => false];
+        if(isset($_FILES)) {
+            $target_dir = ROOT. '/public/tmp/';
+            $target_name = time() . '_' . basename($_FILES['file']['name']);
+            $target_file = $target_dir . $target_name;
+            if (!file_exists($target_file)) {
+                if (move_uploaded_file($_FILES['file']['tmp_name'], $target_file)) {
+                    $header = $_SERVER['SERVER_PROTOCOL'] . ' 200 OK';
+                    $json['data'] = $target_name;
+
+                }
+            }
+        }
+        header($header);
+        header('Content-Type: application/json');
+        echo json_encode($json);
+    }
+
+    /**
+     *
+     */
+    public function delete_upload()
+    {
+        $header = $_SERVER['SERVER_PROTOCOL'] . ' 412 Precondition Failed';
+        $json = ['data' => false];
+        $args = $this->get_payload(true);
+        if(array_key_exists('file', $args) && file_exists(ROOT . '/public/tmp/' . $args['file'])) {
+            unlink(ROOT . '/public/tmp/' . $args['file']);
+            $header = $_SERVER['SERVER_PROTOCOL'] . ' 200 OK';
+            $json['data'] = true;
+        }
+        header($header);
+        header('Content-Type: application/json');
+        echo json_encode($json);
+    }
+
+    /**
+     * @param $file_name
+     */
+    public function move_upload($file_name)
+    {
+        $origin_dir = ROOT. '/public/tmp/';
+        $target_dir = ROOT. '/public/uploads/';
+        if(file_exists($origin_dir . $file_name)) {
+
+        }
     }
 }
