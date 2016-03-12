@@ -307,8 +307,8 @@ class Model
         $fields = $this->fields_required_options;
         foreach ($data_args as $key => $value) {
             if (array_key_exists($key, $fields)
-                && ($role == false
-                    || (array_key_exists('role', $fields[$key]) && $role != $fields[$key]['role']))) {
+                && ($role != false
+                    && (array_key_exists('role', $fields[$key]) && $role != $fields[$key]['role']))) {
                 array_push($errors, [$key => 'Invalid field.']);
             }
         }

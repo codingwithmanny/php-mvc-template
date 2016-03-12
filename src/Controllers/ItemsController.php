@@ -100,6 +100,8 @@ class ItemsController extends Controller
 
         $args = $this->get_payload();
         $args['modified'] = date('Y-m-d H:i:s', time());
+//        var_dump($args);
+//        die();
         $this->_update($query, $args);
     }
 

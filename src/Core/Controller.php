@@ -204,6 +204,7 @@ class Controller
         }
 
         $results = $this->model->update($query, $args, $role);
+
         $role = false;
         if($this->middleware != false) {
             $role = $this->middleware->get_role();
