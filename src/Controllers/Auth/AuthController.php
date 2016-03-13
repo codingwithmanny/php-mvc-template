@@ -77,8 +77,12 @@ class AuthController extends Controller
         if(array_key_exists('errors', $results) && !$this->json_request()) {
             $errors = [];
             foreach($results['errors'] as $key => $value) {
-                foreach ($value as $k => $v) {
-                    array_push($errors, $k);
+                if (gettype($value) != 'array') {
+                    array_push($errors, $value);
+                } else {
+                    foreach ($value as $k => $v) {
+                        array_push($errors, $k);
+                    }
                 }
             }
             $errors = implode(',', $errors);
