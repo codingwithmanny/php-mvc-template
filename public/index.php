@@ -51,6 +51,17 @@ $router->post('/itemstags/{id}', ['App\Controllers\ItemsTagsController', 'update
 //items-tags
 $router->get('/items/{id}/tags', ['App\Controllers\ItemsTagsController', 'itemstags']);
 
+//item images
+$router->get('/itemimages/', ['App\Controllers\ItemImagesController', 'index']);
+$router->get('/itemimages/create', ['App\Controllers\ItemImagesController', 'create_form']);
+$router->post('/itemimages', ['App\Controllers\ItemImagesController', 'create']);
+$router->post('/itemimages/upload', ['App\Controllers\ItemImagesController', 'upload']);
+$router->post('/itemimages/deleteupload', ['App\Controllers\ItemImagesController', 'delete_upload']);
+$router->get('/itemimages/{id}', ['App\Controllers\ItemImagesController', 'read']);
+$router->get('/itemimages/{id}/delete', ['App\Controllers\ItemImagesController', 'delete']);
+$router->get('/itemimages/{id}/edit', ['App\Controllers\ItemImagesController', 'update_form']);
+$router->post('/itemimages/{id}', ['App\Controllers\ItemImagesController', 'update']);
+
 //auth
 $router->get('/auth/register', ['App\Controllers\Auth\AuthController', 'register_form']);
 $router->post('/auth/register', ['App\Controllers\Auth\AuthController', 'register']);

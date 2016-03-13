@@ -2,24 +2,23 @@
 /**
  * Created by PhpStorm.
  * User: manuelpineault
- * Date: 2016-03-10
- * Time: 3:04 PM
+ * Date: 2016-03-12
+ * Time: 11:26 AM
  */
 
 namespace App\Controllers;
 
-use App\Core\Controller;
 
-class ItemsController extends Controller
+class TemplateController
 {
     /**
      * ItemsController constructor.
      */
     public function __construct()
     {
-        $this->model_name = 'items';
+        $this->model_name = '';
         $this->template_dir = 'templates';
-        $model = new \App\Models\ItemsModel();
+        $model = new \App\Models\();
         parent::__construct($model);
     }
 

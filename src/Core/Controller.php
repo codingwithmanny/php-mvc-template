@@ -75,7 +75,6 @@ class Controller
             //load view
             $parent_template = ($this->json_request()) ? 'json' : $this->parent_template;
 
-
             $this->load_view($this->template_dir . '/all', $parent_template, $results);
         }
     }
@@ -268,15 +267,15 @@ class Controller
     /**
      * @return mixed
      */
-    function get_payload()
+    function get_payload($all = false)
     {
         $post = $_POST;
-
         if($this->json_request()) {
             $request_body = file_get_contents('php://input');
             $post = json_decode($request_body, true);
         }
-        return $this->model->helper_fieldscleanup($post);
+
+        return ($all) ? $post : $this->model->helper_fieldscleanup($post);
     }
 
     /**

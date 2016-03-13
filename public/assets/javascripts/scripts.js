@@ -50,10 +50,12 @@ $(document).ready(function(){
 
         if(payload !== null && payload !== undefined && payload !== false && payload !== '') {
             if (validate_json(payload)) {
-                options.data = JSON.stringify(payload);
+                options.data = payload;
                 options.contentType = 'application/json; charset=utf-8';
             } else {
                 options.data = payload;
+                options.contentType = false;
+                options.dataType = false;
             }
         }
 
@@ -62,7 +64,7 @@ $(document).ready(function(){
 
     //livesearch
     $('input.livesearch').each(function(){
-        if($(this).attr('data-model') != null && $(this).attr('data-model') != '' && webtoken != '') {
+        if($(this).attr('data-model') != null && $(this).attr('data-model') != '') {
             var id = $(this).attr('name');
             var model = $(this).attr('data-model');
             var dataid = $(this).attr('data-id');
@@ -71,7 +73,6 @@ $(document).ready(function(){
 
             //hide input
             $(this).attr('type', 'hidden');
-
 
             var dropdown = '<div class="dropdown"><input autocomplete="off" class="form-control" placeholder="Search for ' + id + '" type="search" id="' + id + '" value=""';
 
@@ -126,7 +127,7 @@ $(document).ready(function(){
                 var label = $(this).attr('data-label');
                 $('input[name='+id+']').val(data);
 
-                var button = $('<button class="btn btn-primary">'+label+' &times;</button>');
+                var button = $('<a href="#" class="btn btn-primary">'+label+' &times;</a>');
                 button.click(function(){
                     $('input[name='+id+']').val('');
                     $('#' + id).show();
@@ -144,7 +145,7 @@ $(document).ready(function(){
                 ajax_request('get', '/'+model+'/'+value, null, function(data, text_status, jq_xhr) {
                     if(data.data) {
                         if(datalabel in data.data) {
-                            var button = $('<button class="btn btn-primary">'+data.data[datalabel]+' &times;</button>');
+                            var button = $('<a href="#" class="btn btn-primary">'+data.data[datalabel]+' &times;</a>');
                             button.click(function(){
                                 $('input[name='+id+']').val('');
                                 $('#' + id).show();
@@ -156,6 +157,88 @@ $(document).ready(function(){
                     }
                 });
             }
+        }
+    });
+
+    //file upload
+    $('input.file').each(function() {
+        if($(this).attr('data-accept') != null && $(this).attr('data-accept') != '') {
+            var accept = $(this).attr('data-accept');
+            var id = $(this).attr('name');
+            var model = $(this).attr('data-model');
+            var field = $(this);
+            var data_input = $(this).val();
+
+            //hide input
+            $(this).attr('type', 'hidden');
+
+            var upload_container = $('<div id="' + id +'-uploader" style="display: block; overflow: hidden;"></div>');
+            var upload_input = $('<input id="' + id + '-file" type="file" class="form-control" style="display: none;" />');
+            var upload_button = $('<a href="#" class="btn btn-primary" data-loading-text="Uploading...">Choose file</a>');
+
+            upload_input.on('change', function(){
+                var input = $(this).val();
+                if(input != '' && input != null) {
+                    var form_data = new FormData();
+                    var file_data = document.getElementById(id + '-file');
+                    var file;
+                    for(var i = 0; i < file_data.files.length; i++) {
+                        file = file_data.files[i];
+                        form_data.append('file', file);
+                    }
+                    upload_button.button('loading');
+                    $('input').attr('disabled', 'disabled').addClass('disabled');
+                    $('button[type=submit]').attr('disabled', 'disabled').addClass('disabled');
+                    ajax_request('post', '/' + model + '/upload', form_data, function(data){
+                        if(data.data != false) {
+                            upload_button.button('reset').hide();
+                            field.val(data.data);
+                            upload_container.append('<div class="thumbnail col-xs-1"><img src="/tmp/'+data.data+'"/><a href="#" data-value="'+data.data+'" class="btn btn-danger btn-block">&times;</a></div>');
+                        }
+                        $('input').removeAttr('disabled').removeClass('disabled');
+                        $('button[type=submit]').removeAttr('disabled').removeClass('disabled');
+                    }, function() {
+                        $('input').removeAttr('disabled').removeClass('disabled');
+                        $('button[type=submit]').removeAttr('disabled').removeClass('disabled');
+                    });
+                }
+            });
+
+            upload_button.click(function(){
+                $(this).parent().children('input').click();
+                return false;
+            });
+
+            upload_container.on('click', '.thumbnail a', function(){
+                var file = JSON.stringify({file: $(this).attr('data-value')});
+                $('input').attr('disabled', 'disabled').addClass('disabled');
+                $('button[type=submit]').attr('disabled', 'disabled').addClass('disabled');
+                ajax_request('post', '/' + model + '/deleteupload', file, function(data) {
+                    if(data.data == true) {
+                        field.val('');
+                        upload_container.children('.thumbnail').remove();
+                        upload_button.button('reset').show();
+                    }
+                    $('input').removeAttr('disabled').removeClass('disabled');
+                    $('button[type=submit]').removeAttr('disabled').removeClass('disabled');
+                }, function(){
+                    $('input').removeAttr('disabled').removeClass('disabled');
+                    $('button[type=submit]').removeAttr('disabled').removeClass('disabled');
+                });
+                return false;
+            });
+
+            upload_container.append(upload_input);
+            upload_container.append(upload_button);
+
+            if(data_input != '' && data_input.length > 1) {
+                upload_button.hide();
+                upload_container.append('<div class="thumbnail col-xs-1"><img src="/uploads/'+data_input+'"/></div>');
+                upload_input.remove();
+            }
+
+            //add uploader
+            $(this).parent().append(upload_container);
         }
     });
 });

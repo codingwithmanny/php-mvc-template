@@ -7,3 +7,7 @@ public/.sass-cache/*
 /vendor/
 
 bower_components/*
+
+public/uploads/*
+
+public/tmp/*
