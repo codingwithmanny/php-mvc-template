@@ -28,7 +28,7 @@ class ItemImagesModel extends Model
     protected $fields_required_options = [
         'item_id' => ['type' => 'text', 'attributes' => ['class' => 'livesearch form-control', 'placeholder' => 'Item Id', 'data-model' => 'items', 'data-id' => 'id', 'data-label' => 'name']],
         'caption' => ['type' => 'text', 'attributes' => ['class' => 'form-control', 'placeholder' => 'Caption']],
-        'url' => ['type' => 'text', 'attributes' => ['class' => 'file form-control', 'placeholder' => 'Image', 'data-accept' => 'image/*', 'data-model' => 'itemimages']],
+        'url' => ['type' => 'text', 'attributes' => ['class' => 'file form-control', 'placeholder' => 'Image URL', 'data-accept' => 'image/*', 'data-model' => 'itemimages']],
     ];
 
     /**

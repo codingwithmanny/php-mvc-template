@@ -9,3 +9,5 @@ public/.sass-cache/*
 bower_components/*
 
 public/uploads/*
+
+public/tmp/*

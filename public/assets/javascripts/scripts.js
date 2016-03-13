@@ -50,24 +50,21 @@ $(document).ready(function(){
 
         if(payload !== null && payload !== undefined && payload !== false && payload !== '') {
             if (validate_json(payload)) {
-                console.log('valid json');
                 options.data = payload;
                 options.contentType = 'application/json; charset=utf-8';
             } else {
-                console.log('NOT json');
                 options.data = payload;
                 options.contentType = false;
                 options.dataType = false;
             }
         }
-        console.log(options);
 
         $.ajax(options);
     }
 
     //livesearch
     $('input.livesearch').each(function(){
-        if($(this).attr('data-model') != null && $(this).attr('data-model') != '' && webtoken != '') {
+        if($(this).attr('data-model') != null && $(this).attr('data-model') != '') {
             var id = $(this).attr('name');
             var model = $(this).attr('data-model');
             var dataid = $(this).attr('data-id');
@@ -130,7 +127,7 @@ $(document).ready(function(){
                 var label = $(this).attr('data-label');
                 $('input[name='+id+']').val(data);
 
-                var button = $('<button class="btn btn-primary">'+label+' &times;</button>');
+                var button = $('<a href="#" class="btn btn-primary">'+label+' &times;</a>');
                 button.click(function(){
                     $('input[name='+id+']').val('');
                     $('#' + id).show();
@@ -148,7 +145,7 @@ $(document).ready(function(){
                 ajax_request('get', '/'+model+'/'+value, null, function(data, text_status, jq_xhr) {
                     if(data.data) {
                         if(datalabel in data.data) {
-                            var button = $('<button class="btn btn-primary">'+data.data[datalabel]+' &times;</button>');
+                            var button = $('<a href="#" class="btn btn-primary">'+data.data[datalabel]+' &times;</a>');
                             button.click(function(){
                                 $('input[name='+id+']').val('');
                                 $('#' + id).show();
@@ -165,18 +162,19 @@ $(document).ready(function(){
 
     //file upload
     $('input.file').each(function() {
-        if($(this).attr('data-accept') != null && $(this).attr('data-accept') != '' && webtoken != '') {
+        if($(this).attr('data-accept') != null && $(this).attr('data-accept') != '') {
             var accept = $(this).attr('data-accept');
             var id = $(this).attr('name');
             var model = $(this).attr('data-model');
             var field = $(this);
+            var data_input = $(this).val();
 
             //hide input
             $(this).attr('type', 'hidden');
 
             var upload_container = $('<div id="' + id +'-uploader" style="display: block; overflow: hidden;"></div>');
             var upload_input = $('<input id="' + id + '-file" type="file" class="form-control" style="display: none;" />');
-            var upload_button = $('<button class="btn btn-primary" data-loading-text="Uploading...">Choose file</button>');
+            var upload_button = $('<a href="#" class="btn btn-primary" data-loading-text="Uploading...">Choose file</a>');
 
             upload_input.on('change', function(){
                 var input = $(this).val();
@@ -232,6 +230,12 @@ $(document).ready(function(){
 
             upload_container.append(upload_input);
             upload_container.append(upload_button);
+
+            if(data_input != '' && data_input.length > 1) {
+                upload_button.hide();
+                upload_container.append('<div class="thumbnail col-xs-1"><img src="/uploads/'+data_input+'"/></div>');
+                upload_input.remove();
+            }
 
             //add uploader
             $(this).parent().append(upload_container);

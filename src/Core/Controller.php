@@ -270,7 +270,6 @@ class Controller
     function get_payload($all = false)
     {
         $post = $_POST;
-
         if($this->json_request()) {
             $request_body = file_get_contents('php://input');
             $post = json_decode($request_body, true);

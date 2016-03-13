@@ -56,6 +56,10 @@ class ItemImagesController extends Controller
     {
         $args = $this->get_payload();
         $args['created'] = $args['modified'] = date('Y-m-d H:i:s', time());
+
+        if(array_key_exists('url', $args)) {
+            $this->move_upload($args['url']);
+        }
         $this->_create($args);
     }
 
@@ -97,8 +101,9 @@ class ItemImagesController extends Controller
             ]
         ];
 
-        $args = $this->get_payload();
+        $args = $this->get_payload(true);
         $args['modified'] = date('Y-m-d H:i:s', time());
+
         $this->_update($query, $args);
     }
 
@@ -127,6 +132,7 @@ class ItemImagesController extends Controller
         if(isset($_FILES)) {
             $target_dir = ROOT. '/public/tmp/';
             $target_name = time() . '_' . basename($_FILES['file']['name']);
+            $target_name = str_replace(' ', '_', $target_name);
             $target_file = $target_dir . $target_name;
             if (!file_exists($target_file)) {
                 if (move_uploaded_file($_FILES['file']['tmp_name'], $target_file)) {
@@ -166,8 +172,9 @@ class ItemImagesController extends Controller
     {
         $origin_dir = ROOT. '/public/tmp/';
         $target_dir = ROOT. '/public/uploads/';
-        if(file_exists($origin_dir . $file_name)) {
 
+        if(file_exists($origin_dir . $file_name)) {
+            rename($origin_dir . $file_name, $target_dir . $file_name);
         }
     }
 }
