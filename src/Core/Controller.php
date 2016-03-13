@@ -60,7 +60,8 @@ class Controller
     public function _index($query = [], $select = false, $return = false)
     {
         //request
-        $query['params'] = $this->model->helper_paramscleanup($_GET);
+        $get = (array_key_exists('params',$query) && count($query['params']) > 0) ? $query['params'] : $_GET;
+        $query['params'] = $this->model->helper_paramscleanup($get);
 
         $results = $this->model->all($query, $select);
 
